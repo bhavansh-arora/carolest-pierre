@@ -11,6 +11,13 @@
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
   var money = function (n) { return "$" + Math.round(n).toLocaleString("en-CA"); };
 
+  // Pages always open at the top (unless a #section is requested), so a restored scroll can't tuck the hero under the header.
+  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+  var toTop = function () { if (!location.hash) { window.scrollTo(0, 0); if (lenis) lenis.scrollTo(0, { immediate: true }); } };
+  toTop();
+  window.addEventListener("load", toTop);
+  window.addEventListener("pageshow", function (e) { if (e.persisted) toTop(); });
+
   doc.classList.remove("no-js");
   doc.classList.add("js");
   if (reduced) doc.classList.add("reduced");
@@ -22,19 +29,30 @@
     var seen = false;
     try { seen = sessionStorage.getItem("csp-loaded") === "1"; sessionStorage.setItem("csp-loaded", "1"); } catch (e) {}
     if (seen || reduced) { el.remove(); return Promise.resolve(); }
+    document.body.style.overflow = "hidden";
     var count = $(".count", el);
+    // Progress follows real loading (fonts + page assets) but never rushes: it eases toward its target
+    // and holds a short minimum so the name animation can finish.
+    var loaded = false, MIN = 1900, start = performance.now(), shown = 0;
+    var done = function () { loaded = true; };
+    if (document.readyState === "complete") done(); else window.addEventListener("load", done);
+    setTimeout(done, 5000);
     return new Promise(function (resolve) {
-      var start = performance.now();
-      var dur = 1300;
       (function tick(now) {
-        var p = Math.min(1, (now - start) / dur);
-        if (count) count.textContent = String(Math.round(p * 100)).padStart(3, "0");
-        if (p < 1) requestAnimationFrame(tick);
-        else {
+        var t = Math.min(1, (now - start) / MIN);
+        var target = loaded ? t : Math.min(t, 0.86);
+        shown += (target - shown) * 0.14;
+        if (target === 1 && 1 - shown < 0.015) shown = 1;
+        el.style.setProperty("--p", shown.toFixed(4));
+        if (count) count.textContent = Math.round(shown * 100) + "%";
+        if (shown < 1) { requestAnimationFrame(tick); return; }
+        el.classList.add("is-leaving");
+        setTimeout(function () {
           el.classList.add("is-done");
-          setTimeout(function () { el.remove(); }, 900);
+          document.body.style.overflow = "";
           resolve();
-        }
+          setTimeout(function () { el.remove(); }, 1300);
+        }, 380);
       })(start);
     });
   }
@@ -43,7 +61,7 @@
   var lenis = null;
   function smooth() {
     if (reduced || !window.Lenis || !finePointer) return;
-    lenis = new window.Lenis({ lerp: 0.11, smoothWheel: true });
+    lenis = new window.Lenis({ lerp: 0.075, smoothWheel: true, wheelMultiplier: 0.95 });
     if (window.gsap && window.ScrollTrigger) {
       lenis.on("scroll", window.ScrollTrigger.update);
       window.gsap.ticker.add(function (t) { lenis.raf(t * 1000); });
@@ -68,6 +86,12 @@
   function header() {
     var h = $(".site-header");
     if (!h) return;
+    // Heroes pad themselves by the header's real height, whatever the screen, zoom or font size.
+    var navBar = $(".nav-bar", h);
+    var measure = function () { doc.style.setProperty("--header-h", Math.ceil(navBar.getBoundingClientRect().bottom - h.getBoundingClientRect().top) + "px"); };
+    measure();
+    if ("ResizeObserver" in window) new ResizeObserver(measure).observe(navBar);
+    window.addEventListener("resize", measure);
     var lastY = window.scrollY;
     var bar = $(".mbar");
     function onScroll() {
@@ -217,15 +241,17 @@
       var vh = window.innerHeight;
       els.forEach(function (el) {
         var r = el.getBoundingClientRect();
-        var words = $$(".w", el);
+        var words = el._w || (el._w = $$(".w", el));
         var p = (vh * 0.85 - r.top) / (r.height + vh * 0.35);
         p = Math.max(0, Math.min(1, p));
         var lit = Math.round(p * words.length);
         words.forEach(function (w, i) { w.classList.toggle("is-lit", i < lit); });
       });
     }
-    window.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", update);
+    var queued = false;
+    var onScroll = function () { if (!queued) { queued = true; requestAnimationFrame(function () { queued = false; update(); }); } };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
     update();
   }
 
@@ -239,7 +265,7 @@
       var amt = parseFloat(el.getAttribute("data-parallax")) || 10;
       gsap.fromTo(el, { yPercent: -amt / 2 }, {
         yPercent: amt / 2, ease: "none",
-        scrollTrigger: { trigger: el.closest("[data-parallax-root]") || el.parentElement, start: "top bottom", end: "bottom top", scrub: true }
+        scrollTrigger: { trigger: el.closest("[data-parallax-root]") || el.parentElement, start: "top bottom", end: "bottom top", scrub: 1.2 }
       });
     });
 
@@ -827,8 +853,10 @@
         m.style.setProperty("--xp-o", Math.max(0, Math.min(1, (p - 0.45) / 0.25)).toFixed(3));
       });
     };
-    window.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", update);
+    var queued = false;
+    var onScroll = function () { if (!queued) { queued = true; requestAnimationFrame(function () { queued = false; update(); }); } };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
     update();
   }
 

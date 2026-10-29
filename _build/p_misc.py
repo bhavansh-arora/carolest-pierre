@@ -1,11 +1,15 @@
-from csp import (BOOK, EMAIL, PHONE, ADDRESS, CITY, btn, lines, page)
+from csp import (BOOK, EMAIL, PHONE, ADDRESS, CITY, art_bg, breath, btn, lines, page, rings)
 
 
 def privacy():
-    body = f'''<section class="frame phero grain">
-  <div class="phero-inner">
-    <div class="crumbs"><a href="index.html">Home</a><span>/</span><span>Privacy</span></div>
-    <h1 class="phero-title" data-split>{lines("Your privacy,", "<em>respected.</em>")}</h1>
+    body = f'''<section class="frame hx hx--page hx--slim grain">
+  {art_bg()}
+  <div class="hx-inner">
+    <div class="hx-copy">
+      <div class="crumbs"><a href="index.html">Home</a><span>/</span><span>Privacy</span></div>
+      <h1 class="hx-title" data-split>{lines("Your privacy,", "<em>respected.</em>")}</h1>
+      <p class="hx-lead">How we collect, use and protect your personal information, in line with Quebec's Law 25.</p>
+    </div>
   </div>
 </section>
 <section class="section">
@@ -30,14 +34,16 @@ def privacy():
 
 
 def not_found():
-    body = f'''<section class="frame hero grain" style="min-height:calc(100svh - var(--frame)*2)">
-  <div class="hero-inner" style="align-content:center">
-    <div class="hero-copy" style="align-self:center">
-      <span class="eyebrow"><span class="num">(404)</span> — Page not found</span>
-      <h1 class="hero-title">{lines("Take a", "<em>deep breath.</em>")}</h1>
-      <p class="hero-sub">This page has wandered off for a massage. Let's get you somewhere relaxing.</p>
+    body = f'''<section class="frame hx hx--page grain" style="min-height:calc(100svh - var(--frame) * 2)">
+  {art_bg()}
+  <div class="hx-inner">
+    <div class="hx-copy">
+      <span class="eyebrow"><span class="dot"></span> Page not found · 404</span>
+      <h1 class="hx-title" data-split>{lines("Take a", "<em>deep breath.</em>")}</h1>
+      <p class="hx-lead">This page has wandered off for a massage. Let's get you somewhere relaxing.</p>
       <div class="btn-row">{btn("Back to home", "index.html", "lime")}{btn("Book online", BOOK, "ghost", ext=True)}</div>
     </div>
+    <div class="hx-art">{rings()}{breath()}</div>
   </div>
 </section>'''
     return page("404.html", "Page not found | Carole St-Pierre salon & spa", "This page could not be found.", body)

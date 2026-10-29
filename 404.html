@@ -20,7 +20,7 @@
 <link rel="preload" href="assets/fonts/cormorant-garamond-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/fonts.css">
 <link rel="stylesheet" href="assets/css/main.css">
-<script>document.documentElement.classList.replace("no-js","js");</script>
+<script>document.documentElement.classList.replace("no-js","js");if("scrollRestoration"in history)history.scrollRestoration="manual";</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": ["BeautySalon", "DaySpa", "HairSalon"], "name": "Carole St-Pierre salon & spa", "url": "https://www.carolest-pierre.com", "telephone": "+1-450-455-7999", "email": "info@carolest-pierre.com", "image": "https://www.carolest-pierre.com/assets/img/ritual-scalp.webp", "logo": "https://www.carolest-pierre.com/assets/img/logo-mark.png", "priceRange": "$$", "address": {"@type": "PostalAddress", "streetAddress": "3210 boul. de la Gare, suite 170", "addressLocality": "Vaudreuil-Dorion", "addressRegion": "QC", "postalCode": "J7V 8W5", "addressCountry": "CA"}, "openingHoursSpecification": [{"@type": "OpeningHoursSpecification", "dayOfWeek": "Monday", "opens": "10:00", "closes": "17:00"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": "Tuesday", "opens": "09:00", "closes": "19:00"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": "Wednesday", "opens": "09:00", "closes": "20:00"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": "Thursday", "opens": "09:00", "closes": "20:00"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": "Friday", "opens": "09:00", "closes": "20:00"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "09:00", "closes": "17:00"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": "Sunday", "opens": "10:00", "closes": "16:00"}], "sameAs": ["https://www.instagram.com/carolestpierre.salonspa/", "https://www.facebook.com/profile.php?id=61553709430803"], "founder": {"@type": "Person", "name": "Carole St-Pierre"}}</script>
 <script src="assets/vendor/gsap.min.js" defer></script>
 <script src="assets/vendor/ScrollTrigger.min.js" defer></script>
@@ -78,14 +78,16 @@
   </div>
 </div>
 <main id="main">
-<section class="frame hero grain" style="min-height:calc(100svh - var(--frame)*2)">
-  <div class="hero-inner" style="align-content:center">
-    <div class="hero-copy" style="align-self:center">
-      <span class="eyebrow"><span class="num">(404)</span> — Page not found</span>
-      <h1 class="hero-title"><span class="ln">Take a</span><span class="ln"><em>deep breath.</em></span></h1>
-      <p class="hero-sub">This page has wandered off for a massage. Let's get you somewhere relaxing.</p>
+<section class="frame hx hx--page grain" style="min-height:calc(100svh - var(--frame) * 2)">
+  <div class="hx-bg" aria-hidden="true"><span class="hx-glow hx-glow--a"></span><span class="hx-glow hx-glow--b"></span><svg class="leaf leaf--1" viewBox="0 0 50 50" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><path d="M12 46C10 28 20 10 46 4c2 24-10 40-34 42Z"/><path d="M12 46C20 32 30 20 44 7"/><path d="M20 34c5 1 10 0 14-3M17 26c3 2 9 2 13 0"/></svg><svg class="leaf leaf--2" viewBox="0 0 50 50" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><path d="M12 46C10 28 20 10 46 4c2 24-10 40-34 42Z"/><path d="M12 46C20 32 30 20 44 7"/><path d="M20 34c5 1 10 0 14-3M17 26c3 2 9 2 13 0"/></svg><svg class="leaf leaf--3" viewBox="0 0 50 50" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><path d="M12 46C10 28 20 10 46 4c2 24-10 40-34 42Z"/><path d="M12 46C20 32 30 20 44 7"/><path d="M20 34c5 1 10 0 14-3M17 26c3 2 9 2 13 0"/></svg><svg class="leaf leaf--4" viewBox="0 0 50 50" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><path d="M12 46C10 28 20 10 46 4c2 24-10 40-34 42Z"/><path d="M12 46C20 32 30 20 44 7"/><path d="M20 34c5 1 10 0 14-3M17 26c3 2 9 2 13 0"/></svg></div>
+  <div class="hx-inner">
+    <div class="hx-copy">
+      <span class="eyebrow"><span class="dot"></span> Page not found · 404</span>
+      <h1 class="hx-title" data-split><span class="ln">Take a</span><span class="ln"><em>deep breath.</em></span></h1>
+      <p class="hx-lead">This page has wandered off for a massage. Let's get you somewhere relaxing.</p>
       <div class="btn-row"><a class="btn btn--lime" href="index.html">Back to home <span class="ic"><svg class="" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span></a><a class="btn btn--ghost" href="https://carolestpierre.zenoti.com/webstoreNew/services" target="_blank" rel="noopener">Book online <span class="ic"><svg class="" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span></a></div>
     </div>
+    <div class="hx-art"><svg class="hx-rings" viewBox="0 0 600 600" aria-hidden="true"><circle class="r1" cx="300" cy="300" r="292"/><circle class="r2" cx="300" cy="300" r="246"/><circle class="r3" cx="300" cy="300" r="200"/><g class="orbit"><circle cx="300" cy="8" r="5"/></g></svg><div class="hx-breath" aria-hidden="true"><span class="hx-breath-ring"><i></i></span><span class="hx-breath-txt"><small>Take a moment</small><strong data-breath>Breathe in</strong></span></div></div>
   </div>
 </section>
 </main>

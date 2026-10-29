@@ -265,8 +265,14 @@ def schema():
 def page(slug, title, description, body, tone="dark", loader=False, extra_schema=None):
     blocks = [schema()] + (extra_schema or [])
     ld = "\n".join(f'<script type="application/ld+json">{json.dumps(b, ensure_ascii=False)}</script>' for b in blocks)
-    loader_html = ('<div class="loader" aria-hidden="true"><div class="loader-inner"><img src="assets/img/logo-mark.png" alt="" width="64" height="64">'
-                   '<div class="word"><span>Naturally</span> <span><em>yours.</em></span></div><div class="count">000</div></div></div>') if loader else ""
+    letters = "".join(f'<span style="--i:{i}">{"&nbsp;" if c == " " else c}</span>' for i, c in enumerate("Carole St-Pierre"))
+    loader_html = ('<div class="loader" aria-hidden="true"><span class="loader-glow"></span>'
+                   '<div class="loader-inner"><div class="loader-mark">'
+                   '<svg class="loader-ring" viewBox="0 0 120 120"><circle class="track" cx="60" cy="60" r="56"/>'
+                   '<circle class="prog" cx="60" cy="60" r="56" pathLength="100"/></svg>'
+                   '<img src="assets/img/logo-mark.png" alt="" width="56" height="56"></div>'
+                   f'<p class="loader-name">{letters}</p><p class="loader-sub">salon &amp; spa <i>✦</i> naturellement vôtre</p></div>'
+                   '<div class="loader-foot"><span>Vaudreuil-Dorion</span><span class="loader-line"><b></b></span><span class="count">0%</span></div></div>') if loader else ""
     canonical = SITE_URL + "/" + ("" if slug == "index.html" else slug)
     doc = f'''<!doctype html>
 <html lang="en" class="no-js">
@@ -290,7 +296,7 @@ def page(slug, title, description, body, tone="dark", loader=False, extra_schema
 <link rel="preload" href="assets/fonts/cormorant-garamond-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/fonts.css">
 <link rel="stylesheet" href="assets/css/main.css">
-<script>document.documentElement.classList.replace("no-js","js");</script>
+<script>document.documentElement.classList.replace("no-js","js");if("scrollRestoration"in history)history.scrollRestoration="manual";</script>
 {ld}
 <script src="assets/vendor/gsap.min.js" defer></script>
 <script src="assets/vendor/ScrollTrigger.min.js" defer></script>
