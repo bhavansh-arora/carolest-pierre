@@ -930,6 +930,15 @@
   }
 
   /* ---------- Footer signature: letters rise in as the footer arrives ---------- */
+  // Looping animations only run while their section is on screen.
+  function pauseOffscreen() {
+    if (!("IntersectionObserver" in window)) return;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { e.target.classList.toggle("is-off", !e.isIntersecting); });
+    }, { rootMargin: "120px 0px" });
+    document.querySelectorAll("main > section, main > div > section, .site-footer").forEach(function (el) { io.observe(el); });
+  }
+
   function footerWord() {
     var el = $("[data-footer-word]");
     if (!el) return;
@@ -946,6 +955,7 @@
   archHero();
   sliders();
   footerWord();
+  pauseOffscreen();
   cursor();
   header();
   openStatus();

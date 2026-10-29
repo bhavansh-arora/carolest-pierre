@@ -110,7 +110,7 @@ def philosophy():
     return f'''<section class="section section--flush-top" aria-label="Our philosophy">
   <div class="container">
     <div class="phil">
-      <figure class="phil-media" data-reveal="curtain">{img("back-massage-white", "A guest resting peacefully during a massage", "(min-width: 1000px) 50vw, 100vw", style="object-position:50% 40%")}</figure>
+      <figure class="phil-media" data-reveal="curtain">{img("aromatic", "Warm aromatic oil poured into a therapist's hand before a massage", "(min-width: 1000px) 50vw, 100vw", style="object-position:45% 50%")}</figure>
       <div class="phil-copy">
         <span class="eyebrow" data-reveal="fade"><span class="dot"></span> Our philosophy</span>
         <blockquote class="phil-quote" data-split>{lines("“Your beauty and", "wellness are our", "<em>number-one</em>", "priority.”")}</blockquote>

@@ -1533,17 +1533,17 @@ html.hdr-hidden .menu-nav { top: 0; }
 @media (max-width: 1023px) { html.hdr-hidden .menu-nav { top: 0; padding-top: calc(14px + env(safe-area-inset-top)); } .menu-nav { transition: top 0.7s var(--ease-out), padding-top 0.7s var(--ease-out); } }
 
 /* ---------- Philosophy (replaces the pinned expanding image) ---------- */
-.phil { display: grid; gap: var(--gap); border-radius: var(--r-xl); overflow: hidden; background: var(--paper-2); border: 1px solid var(--line); }
-.phil-media { margin: 0; width: 100%; aspect-ratio: 4 / 3; overflow: hidden; }
-.phil-media img { width: 100%; height: 100%; object-fit: cover; }
-.phil-copy { display: grid; gap: 22px; align-content: center; padding: clamp(28px, 4vw, 64px); }
-.phil-quote { margin: 0; font-family: var(--serif); font-weight: 400; font-size: clamp(2.3rem, 4.4vw, 4.4rem); line-height: 1.02; letter-spacing: -0.01em; }
+.phil { display: grid; border-radius: var(--r-xl); overflow: hidden; background: var(--paper-2); border: 1px solid var(--line); }
+.phil-media { position: relative; margin: 0; aspect-ratio: 16 / 10; overflow: hidden; }
+.phil-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.phil-media::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, transparent 55%, rgba(19, 45, 40, 0.55)); pointer-events: none; }
+.phil-copy { display: grid; gap: 20px; align-content: center; justify-items: start; padding: clamp(28px, 4vw, 60px); }
+.phil-quote { margin: 0; font-family: var(--serif); font-weight: 400; font-size: clamp(2.2rem, 3.6vw, 3.7rem); line-height: 1.04; letter-spacing: -0.01em; }
 .phil-quote em { font-style: italic; color: var(--lime); }
-.phil-sign { display: grid; gap: 6px; padding-top: 18px; border-top: 1px solid var(--line-2); }
-.phil-sig { font-family: var(--serif); font-style: italic; font-size: 1.8rem; color: var(--lime); line-height: 1; }
+.phil-sign { display: grid; gap: 6px; width: 100%; padding-top: 18px; border-top: 1px solid var(--line-2); }
+.phil-sig { font-family: var(--serif); font-style: italic; font-size: 1.7rem; color: var(--lime); line-height: 1; }
 .phil-sign .mono { color: var(--muted); }
-.phil .link-arrow { justify-self: start; }
-@media (min-width: 1000px) { .phil { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 0; } .phil-media { aspect-ratio: auto; min-height: 560px; } }
+@media (min-width: 1000px) { .phil { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); height: clamp(480px, 40vw, 580px); } .phil-media { aspect-ratio: auto; height: 100%; } }
 
 /* ---------- Footer signature animation ---------- */
 .footer-word { display: block; overflow: visible; }
@@ -1612,3 +1612,23 @@ html.pt-enter .pt-in, .pt.is-cover .pt-in { opacity: 1; transform: none; transit
 html.pt-enter .pt-line b, .pt.is-cover .pt-line b { transform: scaleX(1); }
 .pt.is-cover.is-exit .pt-line b { transform-origin: 100% 50%; transform: scaleX(0); transition: transform 0.4s var(--ease-soft); }
 .reduced .pt { display: none; }
+
+/* ==========================================================================
+   Performance: nothing repaints the whole screen while you scroll.
+   No full-page blend layers, no frosted-glass blurs, no animated text
+   gradients; looping animations pause when their section is off screen.
+   ========================================================================== */
+body::before, .grain::after { display: none; }
+*, *::before, *::after { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+.hx-title em { animation: none; background-position: 40% 0; }
+.hx-glow { filter: none; }
+.hx-cap { background: rgba(7, 21, 18, 0.78); }
+.hx-breath { background: rgba(12, 32, 28, 0.92); }
+.bx-chip, .rit-card .chip, .hs-card figure .chip { background: rgba(7, 21, 18, 0.66); }
+.member figure .chip { background: rgba(250, 247, 242, 0.95); }
+.btn--glass { --bg: rgba(243, 236, 220, 0.16); }
+.js [data-split] .wd { filter: none; will-change: auto; }
+.dot--live { position: relative; animation: none; box-shadow: none; }
+.dot--live::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: inherit; animation: ping 2.2s var(--ease-out) infinite; }
+@keyframes ping { from { transform: scale(1); opacity: 0.6; } to { transform: scale(2.8); opacity: 0; } }
+.is-off, .is-off *, .is-off *::before, .is-off *::after { animation-play-state: paused !important; }
