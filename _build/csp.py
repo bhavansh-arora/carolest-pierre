@@ -1,4 +1,5 @@
 """Shared layout + components for the Carole St-Pierre site build."""
+import hashlib
 import html
 import json
 import os
@@ -28,6 +29,12 @@ HOURS = [  # (label, day index 0=Sun, text)
 ]
 
 E = html.escape
+
+
+def asset(path):
+    """Asset URL stamped with a hash of its contents, so browsers never mix a new page with an old stylesheet or script."""
+    with open(os.path.join(ROOT, path), "rb") as f:
+        return path + "?v=" + hashlib.md5(f.read()).hexdigest()[:8]
 
 
 def ic(name, cls=""):
@@ -283,14 +290,14 @@ def page(slug, title, description, body, tone="dark", loader=False, extra_schema
 <link rel="preload" href="assets/fonts/manrope-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/cormorant-garamond-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/cormorant-garamond-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/fonts.css">
-<link rel="stylesheet" href="assets/css/main.css">
+<link rel="stylesheet" href="{asset('assets/css/fonts.css')}">
+<link rel="stylesheet" href="{asset('assets/css/main.css')}">
 <script>document.documentElement.classList.replace("no-js","js");if("scrollRestoration"in history)history.scrollRestoration="manual";try{{if(sessionStorage.getItem("csp-pt")==="1"&&!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("pt-enter")}}catch(e){{}}</script>
 {ld}
 <script src="assets/vendor/gsap.min.js" defer></script>
 <script src="assets/vendor/ScrollTrigger.min.js" defer></script>
-<script src="assets/js/config.js" defer></script>
-<script src="assets/js/main.js" defer></script>
+<script src="{asset('assets/js/config.js')}" defer></script>
+<script src="{asset('assets/js/main.js')}" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
