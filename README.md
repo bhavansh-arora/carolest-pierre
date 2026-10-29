@@ -12,7 +12,7 @@ python3 -m http.server 8000
 
 | Page | What's on it |
 | --- | --- |
-| `index.html` | Arch hero (photos change with a curtain wipe inside an arch, drawn rings with an orbiting light, a floating stone orb, a live breathing guide, pointer depth), partner row, scroll-lit statement, dense services bento, side-intro spa-ritual scroller, philosophy quote with photo, polaroid promise, bridal teaser, 3-tap **treatment finder**, reviews, team, gift card + app promos, photographic CTA |
+| `index.html` | Arch hero (photos change with a curtain wipe inside an arch, drawn rings with an orbiting light, a floating stone orb, a live breathing guide, pointer depth), partner row, scroll-lit statement, two-row services grid, spa rituals that pin and glide sideways as you scroll (desktop; swipeable on phones), philosophy quote with photo, polaroid promise, bridal teaser, 3-tap **treatment finder**, reviews, team, gift card + app promos, photographic CTA |
 | `weddings.html` | Approach, process, bridal menu (salon / on location tabs), **live bridal quote builder** with suggested start time, gallery, FAQ, inquiry form |
 | `hair.html` | Aveda ritual, full hair menu with sticky section nav, treatments, stylist levels, stylists |
 | `skin.html` | Éminence facials, searchable wax/sugar/threading table, nails, lashes, spray tan prep & aftercare |

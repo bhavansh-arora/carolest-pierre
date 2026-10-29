@@ -292,6 +292,33 @@
       });
     });
 
+    // Spa rituals (desktop): the section pins and the intro and cards glide sideways as you scroll down.
+    mm.add("(min-width: 1024px)", function () {
+      var sec = $("[data-rit-pin]");
+      if (!sec) return;
+      var row = $(".rit", sec), scroller = $(".rit-scroll", sec), bar = $(".rit-progress i", sec);
+      sec.classList.add("is-pinned");
+      scroller.classList.add("is-pinned");
+      var dist = function () { return Math.max(0, row.offsetWidth - sec.clientWidth); };
+      var frame = function () { return parseFloat(getComputedStyle(sec).marginTop) || 0; };
+      var tween = gsap.to(row, {
+        x: function () { return -dist(); }, ease: "none",
+        scrollTrigger: {
+          trigger: sec, start: function () { return "top top+=" + frame(); }, end: function () { return "+=" + dist(); },
+          pin: true, scrub: 0.5, invalidateOnRefresh: true, anticipatePin: 1,
+          onUpdate: function (st) { if (bar) bar.style.transform = "scaleX(" + st.progress.toFixed(4) + ")"; }
+        }
+      });
+      // Each photo drifts inside its frame as it crosses the screen.
+      $$(".rit-card figure img", sec).forEach(function (im) {
+        gsap.fromTo(im, { xPercent: -6, scale: 1.16 }, {
+          xPercent: 6, scale: 1.16, ease: "none",
+          scrollTrigger: { trigger: im.closest(".rit-card"), containerAnimation: tween, start: "left right", end: "right left", scrub: true }
+        });
+      });
+      return function () { sec.classList.remove("is-pinned"); scroller.classList.remove("is-pinned"); };
+    });
+
     // Hero image drift on mouse move
     var hero = $(".hero-media");
     if (hero && finePointer) {

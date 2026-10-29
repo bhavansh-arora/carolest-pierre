@@ -66,40 +66,18 @@ def statement():
 
 def services():
     def photo(cls, href, im, num, cat, title, frm):
-        return (f'<a class="bx bx-photo {cls}" href="{href}" data-reveal>{img(im, "", "(min-width: 1100px) 50vw, 100vw")}'
+        sizes = {"bx-a": "(min-width: 1100px) 55vw, 100vw", "bx-b": "(min-width: 1100px) 40vw, 100vw"}.get(cls, "(min-width: 1100px) 25vw, (min-width: 720px) 50vw, 100vw")
+        return (f'<a class="bx bx-photo {cls}" href="{href}" data-reveal>{img(im, "", sizes)}'
                 f'<span class="bx-chip">{num} · {cat} · {frm}</span><span class="bx-cap"><span class="bx-title">{title}</span><span class="bx-go">{ic("arrow-up")}</span></span></a>')
-    avatars = "".join(f'<span class="av" style="--bd:{c}">{cut("team-" + t, "")}</span>' for t, c in
-                      [("carole", "var(--sage)"), ("christelle", "var(--sand-soft)"), ("jeff", "var(--sage-soft)"), ("melanie", "var(--blush)"), ("genevieve", "var(--sand)")])
-    n, d, t = REVIEWS[0]
     return f'''<section class="section section--flush-top" id="services">
   <div class="container">
-    {sec_head("02", "Services", "100+ treatments", "Everything you need, <em class='accent'>under one roof.</em>", "From a quick brow tidy to a four-hour ritual, every service is delivered by a specialist, never a generalist.")}
+    {sec_head("02", "Services", "100+ treatments", "Everything you need, <em class='accent'>under one roof.</em>", "From a quick brow tidy to a four-hour ritual, every service is delivered by a specialist, in French, English and eight more languages.")}
     <div class="bento2" data-stagger>
       {photo("bx-a", "hair.html", "hair-styling", "01", "Hair &amp; makeup", "Hair, <em>reimagined.</em>", "From $30")}
       {photo("bx-b", "skin.html", "facial-hands", "02", "Esthetics", "Skin that <em>glows.</em>", "From $75")}
-      <div class="bx bx-stat" data-reveal>
-        <div class="bx-row"><span class="avs">{avatars}</span><span class="chip">Since day one</span></div>
-        <p class="bx-big"><span data-count="45">45</span><em>years</em></p>
-        <p class="bx-text">of Carole's craft behind every appointment, and a team of 35+ specialists who still learn from her.</p>
-      </div>
-      <div class="bx bx-note" data-reveal>
-        <div class="bx-row"><span class="eyebrow">Spoken here</span><span class="chip">10 languages</span></div>
-        <p class="bx-mid">Calm, in <em>your</em> language.</p>
-        <p class="bx-text">French, English, Spanish, German, Punjabi, Arabic, Greek, Russian and more, from the front desk to the treatment room.</p>
-      </div>
-      <div class="bx bx-accent" data-reveal>
-        <div class="bx-row"><span class="eyebrow">Today</span><span class="bx-status" data-open-status="short"></span></div>
-        <p class="bx-mid">Your moment, <em>booked in a minute.</em></p>
-        <div class="btn-row">{btn("Book online", BOOK, "", ext=True, small=True)}<a class="bx-tel" href="tel:+14504557999">or call 450 455-7999</a></div>
-      </div>
       {photo("bx-c", "massage.html", "hot-stones", "03", "Massage &amp; body", "Let it <em>all go.</em>", "From $105")}
       {photo("bx-d", "medispa.html", "laser", "04", "Medispa", "Results, <em>safely.</em>", "From $45")}
       {photo("bx-e", "rituals.html", "nails", "05", "Spa rituals", "Half-day <em>bliss.</em>", "From $109")}
-      <figure class="bx bx-quote" data-reveal>
-        <div class="bx-row"><span class="bx-mark" aria-hidden="true">“</span><span class="eyebrow">Kind words</span></div>
-        <blockquote>{E(t)}</blockquote>
-        <figcaption><strong>{E(n)}</strong><span class="muted">Google review · {E(d)}</span><a class="link-arrow" href="#reviews">More reviews {ic("arrow")}</a></figcaption>
-      </figure>
       {photo("bx-f", "weddings.html", "bridal-bouquet", "06", "Bridal", "Your <em>big day.</em>", "From $90")}
     </div>
   </div>
@@ -213,7 +191,9 @@ def rituals():
   <div class="rit-meta"><h3>{ritual_title(name)}</h3><span class="rit-n">{i:02d}</span></div>
   <p>{E(kicker)}.</p>
 </a>''' for i, (slug, name, kicker, im, dur, price, cats, inc) in enumerate(RITUALS, 1))
-    return f'''<section class="frame is-dark grain" id="rituals">
+    end = (f'<a class="rit-end" href="rituals.html"><span class="rit-end-circle">{ic("arrow")}</span>'
+           f'<span class="rit-end-text">All ten <em>rituals</em></span><span class="rit-end-sub">Compare, filter and gift</span></a>')
+    return f'''<section class="frame is-dark grain rit-wrap" id="rituals" data-rit-pin>
   <div class="container section rit">
     <div class="rit-intro">
       <span class="eyebrow" data-reveal="fade"><span class="num">(03)</span> — Spa rituals</span>
@@ -222,8 +202,9 @@ def rituals():
       <div class="btn-row" data-reveal>{btn("All rituals", "rituals.html", "lime")}{btn("Gift a ritual", GIFT, "glass", ext=True, icon="gift")}</div>
       <div class="round-btns rit-nav" data-reveal><button type="button" data-prev aria-label="Previous ritual">{ic("left")}</button><button type="button" data-next aria-label="Next ritual">{ic("arrow")}</button></div>
     </div>
-    <div class="rit-scroll" data-scroller><div class="hs-track rit-track" data-reveal="fade">{cards}</div></div>
+    <div class="rit-scroll" data-scroller><div class="hs-track rit-track" data-reveal="fade">{cards}{end}</div></div>
   </div>
+  <div class="rit-progress" aria-hidden="true"><i></i></div>
 </section>'''
 
 
