@@ -1,5 +1,5 @@
 from content import REVIEWS, RITUALS, TEAM
-from csp import (ribbon, art_bg, breath, rings, cut, phone_mock, ritual_title, BOOK, GIFT, APPLE, GOOGLE_PLAY, REVIEW_GOOGLE, E, btn, book_btn, cta_band, ic, img, lines,
+from csp import (art_bg, breath, rings, cut, phone_mock, ritual_title, BOOK, GIFT, APPLE, GOOGLE_PLAY, REVIEW_GOOGLE, E, btn, book_btn, cta_band, ic, img, lines,
                   page, review_card, sec_head)
 
 
@@ -22,7 +22,7 @@ def hero():
     <div class="hx-copy">
       <span class="eyebrow" data-reveal="fade"><span class="dot"></span> Aveda Concept salon &amp; eco-spa · Vaudreuil-Dorion</span>
       <h1 class="hx-title" data-split>{lines("Naturally", "<em>yours.</em>")}</h1>
-      <p class="hx-lead" data-reveal style="--d:.5s">Hair, skin, massage, medical aesthetics and bridal, under one roof and open 7 days. More than 100 treatments by 35+ specialists, with Aveda and Éminence organics.</p>
+      <p class="hx-lead" data-reveal style="--d:.5s">Hair, skin, massage, medical aesthetics and bridal care, made with Aveda and Éminence plant-based organics.</p>
       <div class="btn-row" data-reveal style="--d:.6s">{book_btn()}{btn("Find my treatment", "#finder", "ghost")}</div>
       <div class="hx-proof" data-reveal style="--d:.7s"><span class="avs">{avatars}</span><span><strong>200+ Google reviews</strong><span class="status" data-open-status="short"></span></span></div>
     </div>
@@ -92,7 +92,7 @@ def philosophy():
       <div class="phil-copy">
         <span class="eyebrow" data-reveal="fade"><span class="dot"></span> Our philosophy</span>
         <blockquote class="phil-quote" data-split>{lines("“Your beauty and", "wellness are our", "<em>number-one</em>", "priority.”")}</blockquote>
-        <div class="phil-sign" data-reveal style="--d:.2s"><span class="phil-sig">Carole St-Pierre</span><span class="mono">Founder · 45+ years of care</span></div>
+        <div class="phil-sign" data-reveal style="--d:.2s"><span class="phil-sig">Carole St-Pierre</span><span class="mono">Founder</span></div>
         <a class="link-arrow" href="about.html" data-reveal style="--d:.3s">Read Carole's story {ic("arrow")}</a>
       </div>
     </div>
@@ -218,8 +218,8 @@ def promise():
   <figure class="pol">{img(im, "", "(min-width: 900px) 30vw, 90vw", style="object-position:" + pos)}<figcaption>{cap}</figcaption></figure>
   <span class="pol-n">0{i}</span><h3>{t}</h3><p>{d}</p>
 </article>''' for i, (im, pos, cap, t, d) in enumerate(items, 1))
-    return f'''<section class="section" id="promise">
-  <div class="container">
+    return f'''<section class="frame is-ivory" id="promise">
+  <div class="container section">
     {sec_head("04", "Our promise", "Aveda · Éminence · Cruelty-free", "Beauty that's kind <em class='accent'>to the planet, too.</em>", "An eco-responsible spa, from the products on our shelves to the protocols in our treatment rooms.")}
     <div class="pols" data-stagger>{cards}</div>
   </div>
@@ -229,7 +229,7 @@ def promise():
 def reviews():
     variants = ["", "lime", "", "dark", "", "", "lime", "", "dark", "", "", ""]
     cards = "".join(review_card(n, d, t, variants[i % len(variants)]) for i, (n, d, t) in enumerate(REVIEWS))
-    return f'''<section class="section is-paper2" id="reviews">
+    return f'''<section class="frame section is-ivory" id="reviews">
   <div class="container">
     {sec_head("07", "Kind words", "Real Google reviews", "Loved by <em class='accent'>Vaudreuil-Dorion.</em>")}
     <div class="review-head" data-reveal style="margin-bottom:28px">
@@ -276,7 +276,7 @@ def promo():
 
 
 def build():
-    body = "\n".join([hero(), partners(), statement(), services(), rituals(), philosophy(), promise(), bridal(), finder(), ribbon(['hair-styling', 'facial-hands', 'hot-stones', 'bridal-curls', 'nails', 'lashes', 'ritual-scalp', 'balneo']), reviews(), team(), promo(),
+    body = "\n".join([hero(), partners(), statement(), services(), rituals(), philosophy(), promise(), bridal(), finder(), reviews(), team(), promo(),
                       cta_band(image="head-massage")])
     return page("index.html", "Carole St-Pierre salon & spa | Aveda hair salon & spa in Vaudreuil-Dorion",
                 "Aveda Concept hair salon and eco-responsible spa in Vaudreuil-Dorion: hair, facials, massage, laser, medical aesthetics and bridal styling. Open 7 days. Book online.",

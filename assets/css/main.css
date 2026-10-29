@@ -1640,3 +1640,11 @@ body::before, .grain::after { display: none; }
 @keyframes ping { from { transform: scale(1); opacity: 0.6; } to { transform: scale(2.8); opacity: 0; } }
 .is-off .marquee-track, .is-off .partners-track, .is-off .ribbon-track, .is-off .leaf, .is-off .hx-glow, .is-off .hx-spin, .is-off .hx-orb,
 .is-off .hx-breath-ring i, .is-off .dot--live::after, .menu:not(.is-open) .dot--live::after { animation-play-state: paused !important; }
+
+/* ---------- Ivory sections: a light pause between the dark ones ---------- */
+.is-ivory { background: #f3ecdc; color: var(--deep); --ink: var(--deep); --ink-2: var(--deep-2); --muted: var(--deep-3); --line: rgba(14, 36, 32, 0.14); --line-2: rgba(14, 36, 32, 0.26);
+  --paper: #f3ecdc; --paper-2: #fbf8f1; --paper-3: #e7dcc4; --leaf: #8c6a32; }
+.is-ivory .accent, .is-ivory .eyebrow .num { color: #8c6a32; }
+.is-ivory .review:not(.review--dark):not(.review--lime) { background: #fbf8f1; }
+.is-ivory .btn--ghost { --ic-bg: var(--deep); --ic-fg: #f3ecdc; }
+.is-ivory .round-btns button:hover { background: var(--deep); color: #f3ecdc; border-color: var(--deep); }
