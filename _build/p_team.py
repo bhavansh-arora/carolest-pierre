@@ -56,7 +56,7 @@ def join():
     return f'''<section class="section">
   <div class="container">
     <div class="band" data-parallax-root data-reveal="fade">
-      {img("salon-floor", "The salon floor at Carole St-Pierre", "100vw", parallax=12)}
+      {img("hair-show", "Aveda creative work on the runway", "100vw", parallax=12)}
       <div class="band-body">
         <span class="eyebrow" style="color:var(--on-dark-2)"><span class="num" style="color:var(--lime)">✦</span> Careers &amp; internships</span>
         <h2 class="h2">Love what you do? <em class="accent">Do it here.</em></h2>
@@ -71,11 +71,10 @@ def join():
 def build():
     hero = phero("Team", ["Meet the", "<em>specialists.</em>"],
                  "Stylists, estheticians, massage therapists, laser technicians and a front-desk team that remembers your name. Many guests have followed their specialist for ten years or more.",
-                 None, "Carole St-Pierre with members of her team",
+                 "salon-floor", "A stylist in the Carole St-Pierre hair studio",
                  [("Leadership", "45+ years"), ("Professionals", "35+"), ("Disciplines", "Hair · skin · body"), ("Languages", "FR · EN · +8")],
                  [("leadership", "Leadership"), ("specialists", "All specialists")], tag="10 languages spoken",
-                 cta=f'<div class="btn-row">{btn("Book by name", BOOK, "lime", ext=True)}{btn("Filter the team", "#specialists", "ghost")}</div>',
-                 cast=["team-christelle", "team-carole", "team-jeff"])
+                 cta=f'<div class="btn-row">{btn("Book by name", BOOK, "lime", ext=True)}{btn("Filter the team", "#specialists", "ghost")}</div>')
     body = "\n".join([hero, leadership(), grid(), join(), cta_band("Book with <em>your favourite.</em>")])
     return page("team.html", "Our Team | Stylists, Estheticians & Massage Therapists | Carole St-Pierre salon & spa",
                 "Meet the 35+ specialists of Carole St-Pierre salon & spa in Vaudreuil-Dorion: Aveda stylists and colourists, estheticians, laser technicians and massage therapists.", body)

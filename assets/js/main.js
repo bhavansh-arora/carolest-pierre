@@ -732,85 +732,31 @@
   function yearStamp() { $$("[data-year]").forEach(function (el) { el.textContent = new Date().getFullYear(); }); }
 
 
-  /* ---------- Letter split ---------- */
-  function splitLetters() {
-    $$("[data-letters]").forEach(function (el) {
-      var text = el.textContent;
-      el.setAttribute("aria-label", text);
-      el.innerHTML = text.split("").map(function (c, i) {
-        return '<span class="ch" aria-hidden="true" style="--i:' + i + '">' + (c === " " ? "&nbsp;" : c) + "</span>";
-      }).join("");
-    });
-  }
-
-  /* ---------- Stage hero: rotating cast + pointer depth ---------- */
-  function stage() {
-    var root = $("[data-stage]");
+  /* ---------- Photo hero: slow crossfade slideshow ---------- */
+  function heroSlides() {
+    var root = $("[data-hero]");
     if (!root) return;
-    var casts = $$(".cast", root);
-    var btns = $$(".stage-nav button", root);
-    var i = 0, timer = null, DUR = 6500;
-    root.style.setProperty("--dur", DUR + "ms");
-    var go = function (n) {
-      i = (n + casts.length) % casts.length;
-      casts.forEach(function (c, k) { c.classList.toggle("is-active", k === i); });
-      btns.forEach(function (b, k) {
-        b.classList.remove("is-active");
-        if (k === i) { void b.offsetWidth; b.classList.add("is-active"); }
-      });
-      root.setAttribute("data-tone", casts[i].getAttribute("data-tone"));
+    var slides = $$(".hero3-slide", root);
+    var count = $(".hero3-count", root), num = $("[data-hero-n]", root);
+    var card = $("[data-hero-card]", root);
+    var i = 0, timer = null, DUR = 7000;
+    if (count) count.style.setProperty("--dur", DUR + "ms");
+    var show = function (n) {
+      i = (n + slides.length) % slides.length;
+      slides.forEach(function (sl, k) { sl.classList.toggle("is-active", k === i); });
+      var sl = slides[i];
+      if (num) num.textContent = String(i + 1).padStart(2, "0");
+      if (count) { count.classList.remove("is-run"); void count.offsetWidth; count.classList.add("is-run"); }
+      if (card) {
+        card.href = sl.getAttribute("data-href");
+        $("[data-hero-label]", card).innerHTML = sl.getAttribute("data-label");
+        $("[data-hero-title]", card).innerHTML = sl.getAttribute("data-title");
+        $(".hero3-thumb img", card).src = sl.getAttribute("data-thumb");
+      }
     };
-    var play = function () { clearInterval(timer); if (!reduced) timer = setInterval(function () { go(i + 1); }, DUR); };
-    btns.forEach(function (b, k) { b.addEventListener("click", function () { go(k); play(); }); });
-    root.addEventListener("mouseenter", function () { root.classList.add("is-paused"); clearInterval(timer); });
-    root.addEventListener("mouseleave", function () { root.classList.remove("is-paused"); go(i); play(); });
+    var play = function () { clearInterval(timer); if (!reduced && slides.length > 1) timer = setInterval(function () { show(i + 1); }, DUR); };
     document.addEventListener("visibilitychange", function () { if (document.hidden) clearInterval(timer); else play(); });
-    go(0); play();
-
-    if (reduced || !finePointer) return;
-    var layers = [[$(".stage-cast", root), -22], [$(".stage-back", root), 14], [$(".stage-front", root), -34], [$(".stage-badge", root), 26]];
-    var tx = 0, ty = 0, cx = 0, cy = 0, raf = null;
-    var tick = function () {
-      cx += (tx - cx) * 0.08; cy += (ty - cy) * 0.08;
-      layers.forEach(function (l) { if (l[0]) l[0].style.transform = "translate3d(" + (cx * l[1]).toFixed(2) + "px," + (cy * l[1] * 0.5).toFixed(2) + "px,0)"; });
-      raf = Math.abs(tx - cx) + Math.abs(ty - cy) > 0.001 ? requestAnimationFrame(tick) : null;
-    };
-    root.addEventListener("mousemove", function (e) {
-      var r = root.getBoundingClientRect();
-      tx = (e.clientX - r.left) / r.width - 0.5; ty = (e.clientY - r.top) / r.height - 0.5;
-      if (!raf) raf = requestAnimationFrame(tick);
-    });
-  }
-
-
-  /* ---------- Services index: floating image follows the cursor ---------- */
-  function serviceIndex() {
-    var root = $("[data-index]");
-    if (!root || !finePointer) return;
-    var float = $(".idx-float", root), pic = $("img", float);
-    var x = 0, y = 0, cx = 0, cy = 0, raf = null, last = "";
-    var tick = function () {
-      cx += (x - cx) * 0.16; cy += (y - cy) * 0.16;
-      var rot = Math.max(-8, Math.min(8, (x - cx) * 0.08));
-      float.style.transform = "translate3d(" + (cx - 150).toFixed(1) + "px," + (cy - 190).toFixed(1) + "px,0) rotate(" + rot.toFixed(2) + "deg) scale(" + (root.classList.contains("is-hover") ? 1 : 0.6) + ")";
-      raf = requestAnimationFrame(tick);
-    };
-    root.addEventListener("mousemove", function (e) {
-      var r = root.getBoundingClientRect();
-      x = e.clientX - r.left; y = e.clientY - r.top;
-      if (!raf) { cx = x; cy = y; raf = requestAnimationFrame(tick); }
-    });
-    $$(".idx-row", root).forEach(function (row) {
-      row.addEventListener("mouseenter", function () {
-        var src = row.getAttribute("data-img");
-        if (src !== last) { pic.src = src; last = src; }
-        root.classList.add("is-hover");
-      });
-    });
-    root.addEventListener("mouseleave", function () {
-      root.classList.remove("is-hover");
-      setTimeout(function () { if (!root.classList.contains("is-hover") && raf) { cancelAnimationFrame(raf); raf = null; } }, 700);
-    });
+    show(0); play();
   }
 
   /* ---------- Expanding image: clip-path opens as you scroll through ---------- */
@@ -893,9 +839,7 @@
 
   /* ---------- Boot ---------- */
   splitLines();
-  splitLetters();
-  stage();
-  serviceIndex();
+  heroSlides();
   expandImage();
   cursor();
   transitions();

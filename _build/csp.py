@@ -276,7 +276,7 @@ def page(slug, title, description, body, tone="dark", loader=False, extra_schema
 <title>{E(title)}</title>
 <meta name="description" content="{E(description)}">
 <link rel="canonical" href="{canonical}">
-<meta name="theme-color" content="#0f2a22">
+<meta name="theme-color" content="#1d1f1a">
 <meta property="og:type" content="website">
 <meta property="og:title" content="{E(title)}">
 <meta property="og:description" content="{E(description)}">
@@ -285,8 +285,9 @@ def page(slug, title, description, body, tone="dark", loader=False, extra_schema
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="favicon.png" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="preload" href="assets/fonts/manrope-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/fonts/fraunces-italic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/manrope-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/cormorant-garamond-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/cormorant-garamond-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/fonts.css">
 <link rel="stylesheet" href="assets/css/main.css">
 <script>document.documentElement.classList.replace("no-js","js");</script>
@@ -317,62 +318,51 @@ PAGE_NO = {"Weddings": "02", "Hair &amp; Makeup": "03", "Skin &amp; Esthetics": 
            "Spa rituals": "07", "Team": "08", "About": "09", "Visit": "10"}
 
 
-def phero(crumb, title_lines, lead, image, alt, facts, jumps=None, tag="", cta=None, cutout=None, cast=None):
-    """Inner-page hero. With `cutout` (or `cast`, a list of cutouts) it's a layered stage; otherwise a full-bleed cinema shot."""
+def phero(crumb, title_lines, lead, image, alt, facts, jumps=None, tag="", cta=None, focus="50% 50%"):
+    """Inner-page hero: a framed full-bleed photograph with the title set over its calm lower third."""
     facts_html = "".join(f"<div><dt>{k}</dt><dd>{v}</dd></div>" for k, v in facts)
+    cta_html = cta if cta is not None else f'<div class="btn-row">{book_btn()}{btn("Call " + PHONE, TEL, "glass", icon="phone")}</div>'
+    no = PAGE_NO.get(crumb, "")
     jump_html = ""
     if jumps:
-        jump_html = '<nav class="jump" aria-label="On this page">' + "".join(f'<a href="#{a}">{t}</a>' for a, t in jumps) + "</nav>"
-    cta_html = cta if cta is not None else f'<div class="btn-row">{book_btn()}{btn("Call " + PHONE, TEL, "ghost", icon="phone")}</div>'
-    no = PAGE_NO.get(crumb, "")
-    top = f'''<div class="ph-top" data-reveal="fade"><div class="crumbs"><a href="index.html">Home</a><span>/</span><span>{crumb}</span></div><span class="mono ph-no">({no} / 10)</span></div>'''
-    meta = f'''<div class="ph-meta" data-reveal style="--d:.2s">
-      {f'<span class="chip chip--lime mono ph-tag">{tag}</span>' if tag else ""}
-      <p class="lead">{lead}</p>
-      {cta_html}
+        jump_html = ('<nav class="jumpbar" aria-label="On this page"><div class="container jumpbar-in"><span class="eyebrow">On this page</span>'
+                     + "".join(f'<a href="#{a}">{t}</a>' for a, t in jumps) + "</div></nav>")
+    return f'''<section class="frame hero3 hero3--page" data-parallax-root>
+  <div class="hero3-media"><figure class="hero3-slide is-active">{img(image, alt, "100vw", eager=True, style="object-position:" + focus)}</figure></div>
+  <div class="hero3-shade" aria-hidden="true"></div>
+  <div class="hero3-inner">
+    <div class="hero3-top" data-reveal="fade">
+      <div class="crumbs"><a href="index.html">Home</a><span>/</span><span>{crumb}</span><span class="crumbs-no">{no} / 10</span></div>
+      <aside class="hero3-card hero3-facts" data-reveal style="--d:.5s">
+        {f'<span class="eyebrow"><span class="dot"></span> {tag}</span>' if tag else ""}
+        <dl>{facts_html}</dl>
+      </aside>
     </div>
-    <dl class="ph-facts" data-reveal style="--d:.35s">{facts_html}</dl>'''
-    if cutout or cast:
-        people = cast or [cutout]
-        figs = "".join(f'<figure class="ph-person" style="--k:{i}">{cut(c, alt if i == 0 else "", eager=True)}</figure>' for i, c in enumerate(people))
-        return f'''<section class="frame ph ph--stage grain{" ph--cast" if cast else ""}" data-stage-lite>
-  <div class="stage-glow" aria-hidden="true"></div>
-  <div class="stage-orb" aria-hidden="true"></div>
-  <div class="ph-inner">
-    {top}
-    <h1 class="ph-title" data-split>{lines(*title_lines)}</h1>
-    <div class="ph-people" data-depth>{figs}</div>
-    {badge("Carole St-Pierre ✦ salon &amp; spa ✦ naturally ✦ ", "ph-badge")}
-    {meta}
-    {jump_html}
+    <div class="hero3-bottom">
+      <div class="hero3-copy">
+        <h1 class="hero3-title" data-split>{lines(*title_lines)}</h1>
+        <p class="hero3-lead" data-reveal style="--d:.25s">{lead}</p>
+      </div>
+      <div class="hero3-actions" data-reveal style="--d:.35s">{cta_html}</div>
+    </div>
   </div>
-</section>'''
-    return f'''<section class="frame ph ph--cinema grain" data-parallax-root>
-  <div class="ph-bg">{img(image, alt, "100vw", eager=True, parallax=10)}</div>
-  <div class="ph-inner">
-    {top}
-    <h1 class="ph-title" data-split>{lines(*title_lines)}</h1>
-    {badge("Carole St-Pierre ✦ salon &amp; spa ✦ naturally ✦ ", "ph-badge")}
-    {meta}
-    {jump_html}
-  </div>
-</section>'''
+</section>
+{jump_html}'''
 
 
-def cta_band(title_html="Your moment <em>is waiting.</em>", sub="Book online in under a minute, or call and we will find the perfect time and specialist for you.", model="model-platinum"):
-    return f'''<section class="frame is-dark grain cta-frame">
-  <div class="stage-glow" aria-hidden="true"></div>
-  <figure class="cta-model" aria-hidden="true">{cut(model)}</figure>
-  <div class="container section cta">
-    <span class="eyebrow" data-reveal="fade"><span class="num">✦</span> Open 7 days · Vaudreuil-Dorion</span>
+def cta_band(title_html="Your moment <em>is waiting.</em>", sub="Book online in under a minute, or call and we will find the perfect time and specialist for you.", image="head-massage"):
+    return f'''<section class="frame cta-photo" data-parallax-root>
+  <div class="cta-photo-media">{img(image, "", "100vw", parallax=10)}</div>
+  <div class="container cta">
+    <span class="eyebrow" data-reveal="fade"><span class="dot"></span> Open 7 days · Vaudreuil-Dorion</span>
     <h2 class="display" data-split>{title_html}</h2>
     <p class="lead" data-reveal>{sub}</p>
     <div class="cta-row" data-reveal>
-      <div class="btn-row">{book_btn()}{btn("Buy a gift card", GIFT, "ghost", ext=True)}</div>
+      <div class="btn-row">{book_btn()}{btn("Buy a gift card", GIFT, "glass", ext=True, icon="gift")}</div>
       <div class="cta-contacts">
         <a href="{TEL}"><span class="mono">Call</span><strong>{PHONE}</strong></a>
         <a href="{MAPS}" target="_blank" rel="noopener"><span class="mono">Find us</span><strong>3210 boul. de la Gare</strong></a>
-        <span><span class="mono" style="display:block;color:var(--on-dark-3)">Today</span><strong class="status" data-open-status="short" style="font-size:1.05rem"></strong></span>
+        <span><span class="mono">Today</span><strong class="status" data-open-status="short"></strong></span>
       </div>
     </div>
   </div>
@@ -474,16 +464,3 @@ def cut(name, alt="", cls="", eager=False, style=""):
     st = f' style="{style}"' if style else ""
     return f'<img src="assets/img/cut/{name}.webp" width="{w}" height="{h}" alt="{E(alt)}"{load}{c}{st}>'
 
-
-_BADGES = [0]
-
-
-def badge(text, cls=""):
-    """Rotating circular text badge with the logo mark in the middle."""
-    _BADGES[0] += 1
-    pid = f"bp{_BADGES[0]}"
-    return f'''<div class="badge {cls}" aria-hidden="true">
-  <svg viewBox="0 0 200 200"><defs><path id="{pid}" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/></defs>
-  <text textLength="488" lengthAdjust="spacing"><textPath href="#{pid}" startOffset="0" textLength="488" lengthAdjust="spacing">{E(text)}</textPath></text></svg>
-  <img src="assets/img/logo-mark.png" alt="" width="56" height="56">
-</div>'''

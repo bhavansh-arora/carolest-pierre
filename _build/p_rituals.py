@@ -67,7 +67,7 @@ def etiquette():
 def build():
     hero = phero("Spa rituals", ["Half a day,", "<em>whole new you.</em>"],
                  "Exclusive massage and spa packages for a unique sensory experience, on your own or with someone you love. Book one for yourself, or give it as a gift.",
-                 "aveda-gazebo", "An Aveda campaign image of a woman in a lakeside pavilion",
+                 "nails", "Hands and feet resting on smooth white stones among flowers",
                  [("Rituals from", "$109"), ("Duration", "1 h 30 to 4 h"), ("Products", "Aveda &amp; Éminence"), ("Gift cards", "Never expire")],
                  [("rituals", "All rituals"), ("the-express", "Express"), ("queen-for-a-day", "Queen for a Day"), ("mom-to-be", "Mom-To-Be"), ("for-men", "For Men")],
                  tag="Gift-ready",

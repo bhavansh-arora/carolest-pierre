@@ -11,7 +11,7 @@ Thank you for saying yes! Rather than just sending ideas, we built them, so you 
 
 **Live preview:** [PREVIEW LINK]
 
-Everything uses your real photos, prices, team and reviews, art-directed so the salon looks as premium online as it feels in person: your Aveda campaign imagery as a layered, magazine-style hero, and your whole team photographed on your brand colours. Here are the ideas, and what each one does for the salon.
+Everything uses your real photos, prices, team and reviews, art-directed so the site feels the way your spa does: calm, warm and unhurried, with full-bleed photography, an elegant serif and a soft linen-and-eucalyptus palette, and your whole team presented on matching colours. Here are the ideas, and what each one does for the salon.
 
 **Your wedding page**
 
