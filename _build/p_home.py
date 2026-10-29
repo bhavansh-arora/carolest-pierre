@@ -106,14 +106,17 @@ def services():
 </section>'''
 
 
-def expand():
-    return f'''<section class="xp" data-expand aria-label="Our philosophy">
-  <div class="xp-sticky">
-    <figure class="xp-media">{img("aveda-jungle", "An Aveda campaign image: a model among lush green leaves", "100vw")}</figure>
-    <div class="xp-copy">
-      <span class="eyebrow"><span class="num">✦</span> Our philosophy</span>
-      <p class="xp-quote">“Your beauty and wellness are our <em>number-one</em> priority.”</p>
-      <span class="mono">Carole St-Pierre · Founder</span>
+def philosophy():
+    return f'''<section class="section section--flush-top" aria-label="Our philosophy">
+  <div class="container">
+    <div class="phil">
+      <figure class="phil-media" data-reveal="curtain">{img("back-massage-white", "A guest resting peacefully during a massage", "(min-width: 1000px) 50vw, 100vw", style="object-position:50% 40%")}</figure>
+      <div class="phil-copy">
+        <span class="eyebrow" data-reveal="fade"><span class="dot"></span> Our philosophy</span>
+        <blockquote class="phil-quote" data-split>{lines("“Your beauty and", "wellness are our", "<em>number-one</em>", "priority.”")}</blockquote>
+        <div class="phil-sign" data-reveal style="--d:.2s"><span class="phil-sig">Carole St-Pierre</span><span class="mono">Founder · 45+ years of care</span></div>
+        <a class="link-arrow" href="about.html" data-reveal style="--d:.3s">Read Carole's story {ic("arrow")}</a>
+      </div>
     </div>
   </div>
 </section>'''
@@ -292,7 +295,7 @@ def promo():
 
 
 def build():
-    body = "\n".join([hero(), partners(), statement(), services(), rituals(), expand(), promise(), bridal(), finder(), ribbon(['hair-styling', 'facial-hands', 'hot-stones', 'bridal-curls', 'nails', 'aveda-jungle', 'lashes', 'ritual-scalp', 'balneo']), reviews(), team(), promo(),
+    body = "\n".join([hero(), partners(), statement(), services(), rituals(), philosophy(), promise(), bridal(), finder(), ribbon(['hair-styling', 'facial-hands', 'hot-stones', 'bridal-curls', 'nails', 'lashes', 'ritual-scalp', 'balneo']), reviews(), team(), promo(),
                       cta_band(image="head-massage")])
     return page("index.html", "Carole St-Pierre salon & spa | Aveda hair salon & spa in Vaudreuil-Dorion",
                 "Aveda Concept hair salon and eco-responsible spa in Vaudreuil-Dorion: hair, facials, massage, laser, medical aesthetics and bridal styling. Open 7 days. Book online.",

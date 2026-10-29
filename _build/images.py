@@ -17,7 +17,6 @@ IMAGES = {
     # Brand / editorial
     "ritual-scalp": ("in15_1267_r1-scaled.jpg", 1500, None, 0.4),
     "botanical-leaf": ("botanical_repair_professional_treatment_-_opt_1.jpg", 1400, (4, 5), 0.45),
-    "aveda-jungle": ("aveda-beauty-crop-opt.jpg", 1700, None, 0.5),
     "aveda-folk": ("in15_0750_r1_crop-opt.jpg", 1167, None, 0.4),
     "aveda-gazebo": ("in15_0398_r1-opt.jpg", 1600, None, 0.5),
     "aveda-blossom": ("bl15_5884_r3-opt.jpg", 1067, None, 0.4),

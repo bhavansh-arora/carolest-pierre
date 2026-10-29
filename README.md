@@ -12,7 +12,7 @@ python3 -m http.server 8000
 
 | Page | What's on it |
 | --- | --- |
-| `index.html` | Arch hero (photos change with a curtain wipe inside an arch, drawn rings with an orbiting light, a floating stone orb, a live breathing guide, pointer depth), partner row, scroll-lit statement, dense services bento, side-intro spa-ritual scroller, scroll-expanding philosophy image, polaroid promise, bridal teaser, 3-tap **treatment finder**, reviews, team, gift card + app promos, photographic CTA |
+| `index.html` | Arch hero (photos change with a curtain wipe inside an arch, drawn rings with an orbiting light, a floating stone orb, a live breathing guide, pointer depth), partner row, scroll-lit statement, dense services bento, side-intro spa-ritual scroller, philosophy quote with photo, polaroid promise, bridal teaser, 3-tap **treatment finder**, reviews, team, gift card + app promos, photographic CTA |
 | `weddings.html` | Approach, process, bridal menu (salon / on location tabs), **live bridal quote builder** with suggested start time, gallery, FAQ, inquiry form |
 | `hair.html` | Aveda ritual, full hair menu with sticky section nav, treatments, stylist levels, stylists |
 | `skin.html` | Éminence facials, searchable wax/sugar/threading table, nails, lashes, spray tan prep & aftercare |
@@ -47,7 +47,7 @@ While `formEndpoint` in `assets/js/config.js` is empty, forms open a pre-filled 
 
 ## Tech
 
-Plain HTML/CSS/JS, with no build step needed to host it. Fonts are self-hosted (Cormorant Garamond for display, Manrope for text, both OFL). The palette is a deep pine green with ivory type and champagne-gold accents, under a solid ivory header; every colour is a token at the top of `assets/css/main.css`, and light surfaces (champagne cards, polaroids, the header) switch to dark text automatically. GSAP + ScrollTrigger and Lenis are vendored in `assets/vendor/` and only enhance motion: the site works without them. Signature interactions (arch hero, word-by-word headline reveals, curtain image reveals, drawn section rules, expanding image, custom cursor, page transitions) are vanilla JS in `assets/js/main.js`, and all of them switch off under `prefers-reduced-motion` and on touch devices where they don't apply. Each page carries schema.org BeautySalon/DaySpa data; `sitemap.xml` and `robots.txt` are included.
+Plain HTML/CSS/JS, with no build step needed to host it. Fonts are self-hosted (Cormorant Garamond for display, Manrope for text, both OFL). The palette is a deep pine green with ivory type and champagne-gold accents, under a solid ivory header; every colour is a token at the top of `assets/css/main.css`, and light surfaces (champagne cards, polaroids, the header) switch to dark text automatically. GSAP + ScrollTrigger are vendored in `assets/vendor/` and only enhance motion: the site works without them. Scrolling is native (no smoothing library). Signature interactions (arch hero, word-by-word headline reveals, curtain image reveals, drawn section rules, photo ribbons and sliders, animated footer signature, custom cursor, branded page transitions) are vanilla JS in `assets/js/main.js`, and all of them switch off under `prefers-reduced-motion` and on touch devices where they don't apply. Each page carries schema.org BeautySalon/DaySpa data; `sitemap.xml` and `robots.txt` are included.
 
 ## To confirm with the salon before launch
 

@@ -218,7 +218,7 @@ def footer():
         <div><h3>Salon</h3><ul><li><a href="team.html">Our team</a></li><li><a href="about.html">About Carole</a></li><li><a href="about.html#careers">Careers &amp; internships</a></li><li><a href="visit.html#faq">FAQ</a></li><li><a href="{GIFT}" target="_blank" rel="noopener">Gift cards ↗</a></li><li><a href="{BOOK}" target="_blank" rel="noopener">Book online ↗</a></li></ul></div>
       </div>
     </div>
-    <p class="footer-word" aria-hidden="true">Naturally <em>yours.</em></p>
+    <p class="footer-word" aria-hidden="true" data-footer-word><span class="fw"><span style="--i:0">N</span><span style="--i:1">a</span><span style="--i:2">t</span><span style="--i:3">u</span><span style="--i:4">r</span><span style="--i:5">a</span><span style="--i:6">l</span><span style="--i:7">l</span><span style="--i:8">y</span></span> <em class="fw"><span style="--i:10">y</span><span style="--i:11">o</span><span style="--i:12">u</span><span style="--i:13">r</span><span style="--i:14">s</span><span style="--i:15">.</span></em></p>
     <div class="footer-bottom">
       <span>© <span data-year>2026</span> Carole St-Pierre salon &amp; spa · Aveda Concept salon, Vaudreuil-Dorion</span>
       <nav aria-label="Legal"><a href="privacy.html">Privacy</a><a href="visit.html#policies">Cancellation policy</a><a href="https://www.carolest-pierre.com/" hreflang="fr">Français</a></nav>
@@ -285,16 +285,16 @@ def page(slug, title, description, body, tone="dark", loader=False, extra_schema
 <link rel="preload" href="assets/fonts/cormorant-garamond-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/fonts.css">
 <link rel="stylesheet" href="assets/css/main.css">
-<script>document.documentElement.classList.replace("no-js","js");if("scrollRestoration"in history)history.scrollRestoration="manual";</script>
+<script>document.documentElement.classList.replace("no-js","js");if("scrollRestoration"in history)history.scrollRestoration="manual";try{{if(sessionStorage.getItem("csp-pt")==="1"&&!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("pt-enter")}}catch(e){{}}</script>
 {ld}
 <script src="assets/vendor/gsap.min.js" defer></script>
 <script src="assets/vendor/ScrollTrigger.min.js" defer></script>
-<script src="assets/vendor/lenis.min.js" defer></script>
 <script src="assets/js/config.js" defer></script>
 <script src="assets/js/main.js" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
+<div class="pt" aria-hidden="true"><div class="pt-in"><img src="assets/img/logo-mark.png" alt="" width="52" height="52"><p class="pt-name">Carole St-Pierre</p><p class="pt-to"><span data-pt-to>{PAGE_LABEL.get(slug, "")}</span></p><span class="pt-line"><b></b></span></div></div>
 {loader_html}
 {header(slug, tone)}
 <main id="main">
@@ -308,6 +308,10 @@ def page(slug, title, description, body, tone="dark", loader=False, extra_schema
         f.write(doc)
     return slug
 
+
+PAGE_LABEL = {"index.html": "Home", "weddings.html": "Weddings", "hair.html": "Hair &amp; Makeup", "skin.html": "Skin &amp; Esthetics",
+              "massage.html": "Massage &amp; Body", "medispa.html": "Medispa &amp; Laser", "rituals.html": "Spa rituals", "team.html": "The team",
+              "about.html": "About Carole", "visit.html": "Visit &amp; FAQ", "privacy.html": "Privacy", "404.html": "Carole St-Pierre"}
 
 PAGE_NO = {"Weddings": "02", "Hair &amp; Makeup": "03", "Skin &amp; Esthetics": "04", "Massage &amp; Body": "05", "Medispa &amp; Laser": "06",
            "Spa rituals": "07", "Team": "08", "About": "09", "Visit": "10"}

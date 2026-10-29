@@ -72,6 +72,6 @@ def build():
                  [("rituals", "All rituals"), ("the-express", "Express"), ("queen-for-a-day", "Queen for a Day"), ("mom-to-be", "Mom-To-Be"), ("for-men", "For Men")],
                  tag="Gift-ready",
                  cta=f'<div class="btn-row">{btn("Book a ritual", BOOK, "lime", ext=True)}{btn("Gift a ritual", GIFT, "ghost", ext=True, icon="gift")}</div>')
-    body = "\n".join([hero, ribbon(['ritual-ultimate', 'nails', 'hot-stones', 'ritual-queen', 'pedicure', 'ritual-head-to-toe', 'balneo', 'ritual-mom']), rituals(), gift(), ribbon(['head-massage', 'aveda-jungle', 'wrap', 'facial-hands', 'aromatic', 'ritual-scalp'], True), etiquette(), cta_band("You deserve <em>this.</em>")])
+    body = "\n".join([hero, ribbon(['ritual-ultimate', 'nails', 'hot-stones', 'ritual-queen', 'pedicure', 'ritual-head-to-toe', 'balneo', 'ritual-mom']), rituals(), gift(), ribbon(['head-massage', 'wrap', 'facial-hands', 'aromatic', 'ritual-scalp'], True), etiquette(), cta_band("You deserve <em>this.</em>")])
     return page("rituals.html", "Spa Packages & Rituals in Vaudreuil-Dorion | Carole St-Pierre salon & spa",
                 "Ten signature spa packages in Vaudreuil-Dorion, from the 90-minute Express to Queen for a Day: massage, Éminence facials, manicures and pedicures. Gift cards that never expire.", body)

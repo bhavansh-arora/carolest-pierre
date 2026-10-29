@@ -1,5 +1,5 @@
 /* Carole St-Pierre salon & spa — site behaviour.
-   Vanilla JS. GSAP/ScrollTrigger/Lenis enhance motion when present; everything works without them. */
+   Vanilla JS. GSAP/ScrollTrigger enhance motion when present; everything works without them. */
 (function () {
   "use strict";
 
@@ -33,10 +33,10 @@
     var count = $(".count", el);
     // Progress follows real loading (fonts + page assets) but never rushes: it eases toward its target
     // and holds a short minimum so the name animation can finish.
-    var loaded = false, MIN = 1900, start = performance.now(), shown = 0;
+    var loaded = false, MIN = 1150, start = performance.now(), shown = 0;
     var done = function () { loaded = true; };
     if (document.readyState === "complete") done(); else window.addEventListener("load", done);
-    setTimeout(done, 5000);
+    setTimeout(done, 3500);
     return new Promise(function (resolve) {
       (function tick(now) {
         var t = Math.min(1, (now - start) / MIN);
@@ -52,35 +52,13 @@
           document.body.style.overflow = "";
           resolve();
           setTimeout(function () { el.remove(); }, 1300);
-        }, 380);
+        }, 250);
       })(start);
     });
   }
 
-  /* ---------- Smooth scroll ---------- */
+  // Native scrolling: immediate and familiar. (A smoothing library made the page feel like it was dragging.)
   var lenis = null;
-  function smooth() {
-    if (reduced || !window.Lenis || !finePointer) return;
-    lenis = new window.Lenis({ lerp: 0.075, smoothWheel: true, wheelMultiplier: 0.95 });
-    if (window.gsap && window.ScrollTrigger) {
-      lenis.on("scroll", window.ScrollTrigger.update);
-      window.gsap.ticker.add(function (t) { lenis.raf(t * 1000); });
-      window.gsap.ticker.lagSmoothing(0);
-    } else {
-      (function raf(t) { lenis.raf(t); requestAnimationFrame(raf); })(performance.now());
-    }
-    $$('a[href^="#"]').forEach(function (a) {
-      a.addEventListener("click", function (e) {
-        var id = a.getAttribute("href");
-        if (id.length < 2) return;
-        var t = document.getElementById(id.slice(1));
-        if (!t) return;
-        e.preventDefault();
-        lenis.scrollTo(t, { offset: -100 });
-        history.replaceState(null, "", id);
-      });
-    });
-  }
 
   /* ---------- Header ---------- */
   function header() {
@@ -226,7 +204,7 @@
         (watched.get(en.target) || []).forEach(function (el) { el.classList.add("is-in"); });
         io.unobserve(en.target);
       });
-    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.01 });
+    }, { rootMargin: "0px 0px 6% 0px", threshold: 0 });
     var vh = window.innerHeight;
     items.forEach(function (el) {
       // Anything already on screen at load reveals straight away, even in the bottom margin.
@@ -239,7 +217,7 @@
     });
     // Stagger children of grids marked data-stagger
     $$("[data-stagger]").forEach(function (g) {
-      $$(":scope > [data-reveal]", g).forEach(function (c, i) { c.style.setProperty("--d", (i % 6) * 0.08 + "s"); });
+      $$(":scope > [data-reveal]", g).forEach(function (c, i) { c.style.setProperty("--d", (i % 4) * 0.05 + "s"); });
     });
   }
 
@@ -252,7 +230,7 @@
       els.forEach(function (el) {
         var r = el.getBoundingClientRect();
         var words = el._w || (el._w = $$(".w", el));
-        var p = (vh * 0.85 - r.top) / (r.height + vh * 0.35);
+        var p = (vh * 0.98 - r.top) / (r.height * 0.55 + vh * 0.3);
         p = Math.max(0, Math.min(1, p));
         var lit = Math.round(p * words.length);
         words.forEach(function (w, i) { w.classList.toggle("is-lit", i < lit); });
@@ -845,31 +823,6 @@
     });
   }
 
-  /* ---------- Expanding image: clip-path opens as you scroll through ---------- */
-  function expandImage() {
-    var els = $$("[data-expand]");
-    if (!els.length || reduced) return;
-    var update = function () {
-      var vh = window.innerHeight;
-      els.forEach(function (el) {
-        var r = el.getBoundingClientRect();
-        var p = Math.max(0, Math.min(1, -r.top / Math.max(1, r.height - vh)));
-        var e = 1 - Math.pow(1 - Math.min(1, p / 0.62), 3);
-        var m = el.querySelector(".xp-sticky");
-        m.style.setProperty("--xp-y", (18 * (1 - e)).toFixed(2) + "%");
-        m.style.setProperty("--xp-x", (22 * (1 - e)).toFixed(2) + "%");
-        m.style.setProperty("--xp-r", (32 * (1 - e)).toFixed(1) + "px");
-        m.style.setProperty("--xp-s", (1.25 - 0.25 * e).toFixed(3));
-        m.style.setProperty("--xp-o", Math.max(0, Math.min(1, (p - 0.45) / 0.25)).toFixed(3));
-      });
-    };
-    var queued = false;
-    var onScroll = function () { if (!queued) { queued = true; requestAnimationFrame(function () { queued = false; update(); }); } };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    update();
-  }
-
   /* ---------- Custom cursor ---------- */
   function cursor() {
     if (!finePointer || reduced) return;
@@ -896,33 +849,56 @@
     });
   }
 
-  /* ---------- Page transitions between internal pages ---------- */
+  /* ---------- Page transitions between internal pages ----------
+     The cover is in every page's HTML, and the head script marks html.pt-enter before first paint,
+     so an arriving page is never seen uncovered. Leaving waits for the cover to close fully. */
+  var PT_LABELS = { "index.html": "Home", "weddings.html": "Weddings", "hair.html": "Hair & Makeup", "skin.html": "Skin & Esthetics",
+    "massage.html": "Massage & Body", "medispa.html": "Medispa & Laser", "rituals.html": "Spa rituals", "team.html": "The team",
+    "about.html": "About Carole", "visit.html": "Visit & FAQ", "privacy.html": "Privacy" };
+  var ptEntered = Promise.resolve();
   function transitions() {
-    if (reduced) return;
-    var pt = document.createElement("div");
-    pt.className = "pt"; pt.setAttribute("aria-hidden", "true");
-    pt.innerHTML = '<img src="assets/img/logo-mark.png" alt="">';
-    document.body.appendChild(pt);
-    var came = false;
-    try { came = sessionStorage.getItem("csp-pt") === "1"; sessionStorage.removeItem("csp-pt"); } catch (e) {}
-    if (came) {
-      pt.classList.add("is-entering");
-      requestAnimationFrame(function () { requestAnimationFrame(function () { pt.classList.add("go"); }); });
-      setTimeout(function () { pt.className = "pt"; }, 900);
+    var pt = $(".pt");
+    if (!pt) return;
+    try { sessionStorage.removeItem("csp-pt"); } catch (e) {}
+    if (doc.classList.contains("pt-enter")) {
+      ptEntered = new Promise(function (resolve) {
+        pt.classList.add("is-cover");
+        doc.classList.remove("pt-enter");
+        // Hold the brand a beat, then lift the cover away.
+        setTimeout(function () {
+          pt.classList.add("is-exit");
+          resolve();
+          setTimeout(function () { pt.classList.add("no-anim"); pt.classList.remove("is-cover", "is-exit"); void pt.offsetWidth; pt.classList.remove("no-anim"); }, 950);
+        }, 380);
+      });
     }
+    if (reduced) return;
+    var leaving = false;
     document.addEventListener("click", function (e) {
       var a = e.target.closest("a[href]");
-      if (!a || e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0 || a.target === "_blank") return;
+      if (!a || leaving || e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0 || a.target === "_blank") return;
       var href = a.getAttribute("href");
       if (!/^[a-z0-9-]+\.html(#.*)?$/i.test(href)) return;
       var here = location.pathname.split("/").pop() || "index.html";
-      if (href.split("#")[0] === here) return;
+      var dest = href.split("#")[0];
+      if (dest === here) return;
       e.preventDefault();
+      leaving = true;
+      $("[data-pt-to]", pt).textContent = PT_LABELS[dest] || "";
       try { sessionStorage.setItem("csp-pt", "1"); } catch (err) {}
+      var go = function () { location.href = href; };
+      var timer = setTimeout(go, 900);
+      pt.addEventListener("transitionend", function te(ev) {
+        if (ev.target !== pt || ev.propertyName !== "clip-path") return;
+        pt.removeEventListener("transitionend", te);
+        clearTimeout(timer);
+        setTimeout(go, 120);
+      });
       pt.classList.add("is-leaving");
-      setTimeout(function () { location.href = href; }, 520);
     });
-    window.addEventListener("pageshow", function (ev) { if (ev.persisted) pt.className = "pt"; });
+    window.addEventListener("pageshow", function (ev) {
+      if (ev.persisted) { leaving = false; pt.classList.add("no-anim"); pt.className = "pt"; }
+    });
   }
 
   /* ---------- Photo sliders: autoplay while visible, swipe, dots ---------- */
@@ -953,13 +929,24 @@
     });
   }
 
+  /* ---------- Footer signature: letters rise in as the footer arrives ---------- */
+  function footerWord() {
+    var el = $("[data-footer-word]");
+    if (!el) return;
+    if (reduced || !("IntersectionObserver" in window)) { el.classList.add("is-in"); return; }
+    var io = new IntersectionObserver(function (en) {
+      en.forEach(function (x) { el.classList.toggle("is-in", x.isIntersecting); });
+    }, { threshold: 0.25 });
+    io.observe(el);
+  }
+
   /* ---------- Boot ---------- */
+  transitions();
   splitLines();
   archHero();
   sliders();
-  expandImage();
+  footerWord();
   cursor();
-  transitions();
   header();
   openStatus();
   tabs();
@@ -974,10 +961,9 @@
   counters();
   yearStamp();
   magnetic();
-  smooth();
   gsapMotion();
   scrubWords();
-  preloader().then(function () {
+  preloader().then(function () { return ptEntered; }).then(function () {
     $$(".hx").forEach(function (el) { el.classList.add("is-ready"); });
     reveals();
   });

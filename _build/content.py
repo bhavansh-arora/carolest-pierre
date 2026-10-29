@@ -117,7 +117,7 @@ RITUALS = [
      ["<strong>Your choice:</strong> personalised Antioxidant facial or a 60-minute aromatic massage", "<strong>Gel polish pedicure</strong> with thermo-massage foot soak and foot massage", "<strong>Shampoo with scalp massage</strong> and hair treatment", "<strong>Hair styling</strong> (blow-dry)"]),
     ("mom-to-be", "Mom-To-Be", "A soothing time-out before baby arrives", "ritual-mom-to-be", "4 h", 265, "mom",
      ["<strong>Prenatal massage</strong>, 60 minutes, with a specialised therapist", "<strong>Beauty Glow facial</strong> with a naturally exfoliating advanced peel", "<strong>Express manicure</strong>", "Available after the first trimester (12 weeks)"]),
-    ("back-to-nature", "Back to Nature", "Éminence Organics, start to finish", "aveda-jungle", "4 h", 280, "skin relax",
+    ("back-to-nature", "Back to Nature", "Éminence Organics, start to finish", "aromatic", "4 h", 280, "skin relax",
      ["<strong>Pure Forest facial</strong> with adaptogenic ingredients that soothe the visible effects of stress", "<strong>Aromatic massage</strong> with essential oils, 60 minutes", "<strong>Aveda calming hair wash</strong> and blow-dry"]),
     ("thank-you-mom", "Thank You Mom", "Give the gift of pampering", "ritual-mom", "4 h", 325, "mom",
      ["<strong>Manicure</strong>", "<strong>Pedicure</strong>", "<strong>Massage</strong>, 60 minutes", "<strong>Makeup</strong>"]),
