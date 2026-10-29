@@ -1345,7 +1345,7 @@ main, .site-footer { position: relative; z-index: 1; }
 }
 .site-header .nav-links a:hover, .site-header .nav-links button:hover, .site-header .nav-links [aria-current="page"], .site-header .nav-links .is-current > button,
 .site-header .nav-phone:hover { background: rgba(14, 36, 32, 0.07); }
-.site-header .nav-links [aria-current="page"], .site-header .nav-links .is-current > button { box-shadow: inset 0 -2px 0 var(--lime-deep); }
+
 .site-header .brand-sub { opacity: 0.6; }
 .site-header .menu-toggle { border-color: rgba(14, 36, 32, 0.22); color: var(--deep); }
 .site-header .menu-toggle .bars { background: var(--deep); color: var(--lime); }
@@ -1525,3 +1525,40 @@ html.hdr-hidden .menu-nav { top: 0; }
   /* Solid paper above the tabs (shadows aren't clipped by the strip's own horizontal scroll) */
   .menu-nav { box-shadow: 0 -40px 0 var(--paper), 0 -80px 0 var(--paper), 0 -120px 0 var(--paper), 0 14px 24px -18px rgba(0, 0, 0, 0.7); }
 }
+
+/* ---------- Header: quiet active state (a small gold dot, no pill) ---------- */
+.site-header .nav-links a, .site-header .nav-links button { position: relative; }
+.site-header .nav-links [aria-current="page"], .site-header .nav-links .is-current > button { background: transparent !important; box-shadow: none; }
+.site-header .nav-links [aria-current="page"]::after, .site-header .nav-links .is-current > button::after {
+  content: ""; position: absolute; left: 50%; bottom: 3px; width: 5px; height: 5px; margin-left: -2.5px; border-radius: 50%; background: var(--lime-deep); }
+.site-header .nav-links .is-current > button::after { margin-left: -10px; }
+.site-header .drop a[aria-current="page"]::after { display: none; }
+.site-header .nav-links a:hover, .site-header .nav-links button:hover { background: rgba(14, 36, 32, 0.05); }
+
+/* ---------- Menu sidebar: nav + booking card, clear of the header ---------- */
+.menu-group + .menu-group { margin-top: clamp(48px, 5vw, 80px); }
+.menu-group-head { margin-bottom: clamp(18px, 2vw, 28px); }
+.menu-card { display: none; }
+@media (max-width: 1023px) {
+  .menu-side { display: contents; }
+}
+@media (min-width: 1024px) {
+  .menu-side { position: sticky; top: calc(var(--header-h, 92px) + 32px); align-self: start; display: grid; gap: 22px; transition: top 0.7s var(--ease-out); }
+  html.hdr-hidden .menu-side { top: 32px; }
+  .menu-side .menu-nav { position: static; top: auto; }
+  .menu-nav a.is-active { background: rgba(217, 189, 136, 0.12); color: var(--lime); box-shadow: inset 2px 0 0 var(--lime); border-radius: 4px 14px 14px 4px; }
+  .menu-nav a.is-active .n { color: var(--lime); }
+  .menu-card { display: grid; gap: 12px; justify-items: start; padding: 20px; border-radius: var(--r-lg); background: var(--paper-2); border: 1px solid var(--line); }
+  .menu-card .eyebrow { font-size: 0.6rem; }
+  .menu-card-t { margin: 0; font-family: var(--serif); font-size: 1.55rem; line-height: 1.08; }
+  .menu-card-t em { font-style: italic; color: var(--lime); }
+  .menu-card-d { margin: 0; font-size: 0.86rem; color: var(--muted); line-height: 1.5; }
+  .menu-card-tel { display: inline-flex; align-items: center; gap: 8px; font-size: 0.86rem; font-weight: 600; color: var(--ink-2); }
+  .menu-card-tel svg { width: 14px; height: 14px; color: var(--lime); }
+  .menu-card-tel:hover { color: var(--lime); }
+}
+
+/* Cursor: a fine ring on links instead of a filled blob */
+.cursor.is-link { background: transparent; border: 1px solid rgba(217, 189, 136, 0.7); }
+.menu-card-status { display: inline-flex; align-items: center; gap: 8px; }
+@media (max-width: 1023px) { html.hdr-hidden .menu-nav { top: 0; padding-top: calc(14px + env(safe-area-inset-top)); } .menu-nav { transition: top 0.7s var(--ease-out), padding-top 0.7s var(--ease-out); } }

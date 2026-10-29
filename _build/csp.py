@@ -432,7 +432,16 @@ def menu_layout(groups, label="Menu sections"):
   <div data-reveal>{content}</div>
 </section>''')
     return f'''<div class="menu-layout">
-  <nav class="menu-nav" aria-label="{label}">{nav}</nav>
+  <div class="menu-side">
+    <nav class="menu-nav" aria-label="{label}">{nav}</nav>
+    <aside class="menu-card">
+      <span class="eyebrow menu-card-status" data-open-status="short"></span>
+      <p class="menu-card-t">Not sure what <em>to book?</em></p>
+      <p class="menu-card-d">Tell us how you'd like to feel and we'll match you with the right treatment and specialist.</p>
+      {btn("Book online", BOOK, "lime", ext=True, small=True)}
+      <a class="menu-card-tel" href="{TEL}">{ic("phone")} {PHONE}</a>
+    </aside>
+  </div>
   <div>{"".join(out)}</div>
 </div>'''
 
