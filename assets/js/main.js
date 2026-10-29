@@ -300,11 +300,10 @@
       sec.classList.add("is-pinned");
       scroller.classList.add("is-pinned");
       var dist = function () { return Math.max(0, row.offsetWidth - sec.clientWidth); };
-      var frame = function () { return parseFloat(getComputedStyle(sec).marginTop) || 0; };
       var tween = gsap.to(row, {
         x: function () { return -dist(); }, ease: "none",
         scrollTrigger: {
-          trigger: sec, start: function () { return "top top+=" + frame(); }, end: function () { return "+=" + dist(); },
+          trigger: sec, start: "top top", end: function () { return "+=" + dist(); },
           pin: true, scrub: 0.5, invalidateOnRefresh: true, anticipatePin: 1,
           onUpdate: function (st) { if (bar) bar.style.transform = "scaleX(" + st.progress.toFixed(4) + ")"; }
         }
@@ -513,6 +512,16 @@
   /* ---------- Menu side-nav active state ---------- */
   function menuNav() {
     var nav = $(".menu-nav");
+    if (nav) {
+      var queued = false;
+      var stuck = function () {
+        queued = false;
+        var top = parseFloat(getComputedStyle(nav).top) || 0;
+        nav.classList.toggle("is-stuck", nav.getBoundingClientRect().top <= top + 1);
+      };
+      window.addEventListener("scroll", function () { if (!queued) { queued = true; requestAnimationFrame(stuck); } }, { passive: true });
+      stuck();
+    }
     if (!nav || !("IntersectionObserver" in window)) return;
     var links = $$("a", nav);
     var map = {};
@@ -755,7 +764,7 @@
     $$("[data-qb-send]", root).forEach(function (b) {
       b.addEventListener("click", function () {
         var msg = document.querySelector("#inquiry textarea[name=message]");
-        if (msg) msg.value = root.getAttribute("data-summary") + "\n\n";
+        if (msg) { msg.value = root.getAttribute("data-summary") + "\n\n"; msg.dispatchEvent(new Event("input")); }
         var target = document.getElementById("inquiry");
         if (target) {
           target.scrollIntoView({ behavior: reduced ? "auto" : "smooth" });
@@ -795,6 +804,58 @@
       var body = Object.keys(data).map(function (k) { return k.charAt(0).toUpperCase() + k.slice(1).replace(/_/g, " ") + ": " + data[k]; }).join("\n");
       window.location.href = "mailto:" + CFG.email + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
     }
+  }
+
+  /* ---------- Field helpers: birthday, phone, date hint, growing message boxes ---------- */
+  function fields() {
+    var DAYS = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    // Birthday: digits only, typed straight into MM/DD, and only real dates pass.
+    $$("input.bday").forEach(function (el) {
+      var check = function () {
+        var m = /^(\d{2})\/(\d{2})$/.exec(el.value), ok = !el.value;
+        if (m) { var mo = +m[1], d = +m[2]; ok = mo >= 1 && mo <= 12 && d >= 1 && d <= DAYS[mo - 1]; }
+        el.setCustomValidity(ok ? "" : "Please enter your birthday as MM/DD, for example 07/14.");
+      };
+      el.addEventListener("input", function (e) {
+        var deleting = e.inputType && e.inputType.indexOf("delete") === 0;
+        var d = el.value.replace(/\D/g, "").slice(0, 4);
+        if (d.length === 1 && +d > 1) d = "0" + d;                       // "4" means April
+        if (d.length >= 2 && +d.slice(0, 2) > 12) d = "0" + d.slice(0, 1) + d.slice(1, 3);
+        if (d.length >= 3 && +d[2] > 3) d = d.slice(0, 2) + "0" + d[2];   // "07/5" means the 5th
+        el.value = d.length > 2 || (d.length === 2 && !deleting) ? d.slice(0, 2) + "/" + d.slice(2) : d;
+        check();
+      });
+      el.addEventListener("blur", check);
+      check();
+    });
+    // Phone: only characters a phone number uses, and at least a full local number.
+    $$('input[type="tel"]').forEach(function (el) {
+      var check = function () {
+        var n = el.value.replace(/\D/g, "").length;
+        el.setCustomValidity(!el.value || (n >= 10 && n <= 15) ? "" : "Please enter a full phone number, for example 450 555-0123.");
+      };
+      el.addEventListener("input", function () {
+        var clean = el.value.replace(/[^0-9+()\-.\s]/g, "");
+        if (clean !== el.value) el.value = clean;
+        check();
+      });
+      check();
+    });
+    // Date: show a hint until a date is picked (date inputs ignore placeholder).
+    $$(".date-wrap").forEach(function (wrap) {
+      var el = $("input", wrap);
+      var sync = function () { wrap.classList.toggle("has-value", !!el.value); };
+      el.addEventListener("input", sync); el.addEventListener("change", sync);
+      if (el.form) el.form.addEventListener("reset", function () { setTimeout(sync, 0); });
+      sync();
+    });
+    // Message boxes grow with their text instead of hiding it behind a scrollbar.
+    $$(".field textarea").forEach(function (t) {
+      var fit = function () { t.style.height = "auto"; t.style.height = Math.min(t.scrollHeight + 2, window.innerHeight * 0.6) + "px"; };
+      t.addEventListener("input", fit);
+      if (t.form) t.form.addEventListener("reset", function () { setTimeout(fit, 0); });
+      if (t.value) fit();
+    });
   }
 
   /* ---------- Magnetic buttons ---------- */
@@ -1056,6 +1117,7 @@
   menuNav();
   finder();
   quoteBuilder();
+  fields();
   forms();
   scrollers();
   counters();

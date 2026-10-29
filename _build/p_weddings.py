@@ -212,12 +212,12 @@ def inquiry():
       </div>
       <form class="form-card is-dark" data-form data-subject="Bridal inquiry" data-success="Thank you! Carole's team will reply within one business day.">
         <div class="fields fields--2">
-          <div class="field"><label for="bi-name">Your name</label><input id="bi-name" name="name" required autocomplete="name"></div>
-          <div class="field"><label for="bi-email">Email</label><input id="bi-email" name="email" type="email" required autocomplete="email"></div>
-          <div class="field"><label for="bi-phone">Phone</label><input id="bi-phone" name="phone" type="tel" autocomplete="tel"></div>
-          <div class="field"><label for="bi-date">Wedding date</label><input id="bi-date" name="wedding_date" type="date"></div>
+          <div class="field"><label for="bi-name">Your name</label><input id="bi-name" name="name" required autocomplete="name" placeholder="First and last name"></div>
+          <div class="field"><label for="bi-email">Email</label><input id="bi-email" name="email" type="email" required autocomplete="email" inputmode="email" placeholder="you@example.com"></div>
+          <div class="field"><label for="bi-phone">Phone</label><input id="bi-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="450 555-0123"></div>
+          <div class="field"><label for="bi-date">Wedding date</label><div class="date-wrap"><input id="bi-date" name="wedding_date" type="date"><span class="date-ph" aria-hidden="true">Choose your date</span></div></div>
           <div class="field"><label for="bi-where">Getting ready at</label><select id="bi-where" name="location"><option>The salon</option><option>Home or hotel (within 15 km)</option><option>Venue beyond 15 km</option><option>Not sure yet</option></select></div>
-          <div class="field"><label for="bi-size">People needing services</label><input id="bi-size" name="party_size" type="number" min="1" max="30" value="4"></div>
+          <div class="field"><label for="bi-size">People needing services</label><input id="bi-size" name="party_size" type="number" inputmode="numeric" min="1" max="30" value="4" placeholder="4"></div>
           <div class="field full"><label for="bi-msg">Tell us about your day</label><textarea id="bi-msg" name="message" placeholder="Your vision, inspiration, timing..."></textarea></div>
         </div>
         <div class="btn-row" style="justify-content:space-between">

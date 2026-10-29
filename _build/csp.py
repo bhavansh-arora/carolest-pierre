@@ -211,7 +211,7 @@ def footer():
             <label class="visually-hidden" for="nl-email">Email</label>
             <input id="nl-email" name="email" type="email" required placeholder="Your email" autocomplete="email">
             <label class="visually-hidden" for="nl-bday">Birthday (MM/DD)</label>
-            <input id="nl-bday" class="bday" name="birthday" type="text" inputmode="numeric" placeholder="Birthday MM/DD" pattern="[0-1][0-9]/[0-3][0-9]">
+            <input id="nl-bday" class="bday" name="birthday" type="text" inputmode="numeric" autocomplete="off" maxlength="5" placeholder="Birthday MM/DD" pattern="(0[1-9]|1[0-2])/(0[1-9]|[12][0-9]|3[01])" title="Your birthday as MM/DD, for example 07/14">
             <button class="btn btn--lime" type="submit">Join <span class="ic">{ic("arrow")}</span></button>
           </div>
           <p class="consent">One or two emails a month. Unsubscribe anytime. We never share your details.</p>

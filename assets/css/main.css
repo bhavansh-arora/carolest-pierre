@@ -1078,16 +1078,17 @@ main, .site-footer { position: relative; z-index: 1; }
 .rit-progress { display: none; }
 @media (min-width: 1000px) { .rit-end { width: clamp(300px, 27vw, 400px); } }
 /* Pinned: the section holds still while the intro and cards glide sideways as you scroll. */
-.rit-wrap.is-pinned { height: calc(100svh - var(--frame) * 2); }
+/* No margin while pinned (GSAP mis-measures pinned elements that have one); the inset rounded frame is drawn by the clip instead. */
+.rit-wrap.is-pinned { margin: 0; height: 100svh; border-radius: 0; clip-path: inset(var(--frame) round var(--r-xl)); }
 .rit-wrap.is-pinned .rit { display: flex; align-items: center; gap: clamp(48px, 5vw, 96px); width: max-content; max-width: none; height: 100%; margin: 0;
-  padding: clamp(24px, 4vh, 48px) var(--gutter) clamp(24px, 4vh, 48px) calc(max(0px, (100% - var(--max)) / 2) + var(--gutter)); will-change: transform; }
+  padding: calc(var(--frame) + clamp(24px, 4vh, 48px)) calc(var(--frame) + var(--gutter)) calc(var(--frame) + clamp(24px, 4vh, 48px)) calc(var(--frame) + max(0px, (100% - var(--frame) * 2 - var(--max)) / 2) + var(--gutter)); will-change: transform; }
 .rit-wrap.is-pinned .rit-intro { flex: none; width: clamp(340px, 30vw, 540px); }
 .rit-wrap.is-pinned .rit-nav { display: none; }
 .rit-wrap.is-pinned .rit-scroll { flex: none; margin: 0; }
 .rit-wrap.is-pinned .rit-track { overflow: visible; scroll-snap-type: none; padding: 0; gap: clamp(20px, 2vw, 32px); }
 .rit-wrap.is-pinned .rit-card, .rit-wrap.is-pinned .rit-end { width: min(50vh, 30vw); }
 .rit-wrap.is-pinned .rit-card figure img { transition: none; }
-.rit-wrap.is-pinned .rit-progress { display: block; position: absolute; left: var(--gutter); right: var(--gutter); bottom: clamp(18px, 3.5vh, 36px); height: 2px; border-radius: 2px; background: var(--line-dark); overflow: hidden; }
+.rit-wrap.is-pinned .rit-progress { display: block; position: absolute; left: calc(var(--frame) + var(--gutter)); right: calc(var(--frame) + var(--gutter)); bottom: calc(var(--frame) + clamp(18px, 3.5vh, 36px)); height: 2px; border-radius: 2px; background: var(--line-dark); overflow: hidden; }
 .rit-progress i { display: block; height: 100%; background: var(--lime); transform: scaleX(0); transform-origin: 0 50%; }
 
 /* ---------- Polaroid promise ---------- */
@@ -1499,7 +1500,8 @@ html.hdr-hidden .menu-nav { top: 0; }
 .menu-group-media.gslide { margin-bottom: clamp(20px, 2.4vw, 32px); }
 @media (max-width: 1023px) {
   /* Solid paper above the tabs (shadows aren't clipped by the strip's own horizontal scroll) */
-  .menu-nav { box-shadow: 0 -40px 0 var(--paper), 0 -80px 0 var(--paper), 0 -120px 0 var(--paper), 0 14px 24px -18px rgba(0, 0, 0, 0.7); }
+  /* Only while stuck: before that it would paint over the heading and intro above the tabs. */
+  .menu-nav.is-stuck { box-shadow: 0 -40px 0 var(--paper), 0 -80px 0 var(--paper), 0 -120px 0 var(--paper), 0 14px 24px -18px rgba(0, 0, 0, 0.7); }
 }
 
 /* ---------- Header: quiet active state (a small gold dot, no pill) ---------- */
@@ -1648,3 +1650,18 @@ body::before, .grain::after { display: none; }
 .is-ivory .review:not(.review--dark):not(.review--lime) { background: #fbf8f1; }
 .is-ivory .btn--ghost { --ic-bg: var(--deep); --ic-fg: #f3ecdc; }
 .is-ivory .round-btns button:hover { background: var(--deep); color: #f3ecdc; border-color: var(--deep); }
+
+/* ---------- Form fields ---------- */
+.field { min-width: 0; }
+.field ::placeholder { color: var(--muted); opacity: 0.75; }
+.is-dark .field ::placeholder { color: var(--on-dark-3); }
+.field textarea { overflow-y: auto; }
+/* Date: iOS draws date inputs wider than their box and ignores placeholder. */
+.date-wrap { position: relative; }
+.field input[type="date"] { -webkit-appearance: none; appearance: none; display: block; min-width: 0; max-width: 100%; text-align: left; }
+.field input[type="date"]::-webkit-date-and-time-value { text-align: left; min-height: 1.4em; }
+.date-ph { position: absolute; left: 17px; top: 50%; transform: translateY(-50%); color: var(--muted); opacity: 0.75; pointer-events: none; font-size: 1rem; }
+.is-dark .date-ph { color: var(--on-dark-3); opacity: 1; }
+.date-wrap.has-value .date-ph, .date-wrap:focus-within .date-ph { display: none; }
+.date-wrap:not(.has-value):not(:focus-within) input[type="date"]::-webkit-datetime-edit { color: transparent; }
+.news-form .bday:invalid:not(:placeholder-shown):not(:focus), .field input:invalid:not(:placeholder-shown):not(:focus) { border-color: #d98b74; }

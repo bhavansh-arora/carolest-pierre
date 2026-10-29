@@ -41,11 +41,11 @@ def form():
       </div>
       <form class="form-card is-dark" data-form data-subject="Website message">
         <div class="fields fields--2">
-          <div class="field"><label for="c-name">Name</label><input id="c-name" name="name" required autocomplete="name"></div>
-          <div class="field"><label for="c-email">Email</label><input id="c-email" name="email" type="email" required autocomplete="email"></div>
-          <div class="field"><label for="c-phone">Phone</label><input id="c-phone" name="phone" type="tel" autocomplete="tel"></div>
+          <div class="field"><label for="c-name">Name</label><input id="c-name" name="name" required autocomplete="name" placeholder="First and last name"></div>
+          <div class="field"><label for="c-email">Email</label><input id="c-email" name="email" type="email" required autocomplete="email" inputmode="email" placeholder="you@example.com"></div>
+          <div class="field"><label for="c-phone">Phone</label><input id="c-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="450 555-0123"></div>
           <div class="field"><label for="c-topic">Topic</label><select id="c-topic" name="topic"><option>A treatment question</option><option>Group or event booking</option><option>Gift cards</option><option>Bridal</option><option>Careers</option><option>Something else</option></select></div>
-          <div class="field full"><label for="c-msg">Message</label><textarea id="c-msg" name="message" required></textarea></div>
+          <div class="field full"><label for="c-msg">Message</label><textarea id="c-msg" name="message" required placeholder="How can we help? A treatment, a date, a question…"></textarea></div>
         </div>
         <div class="btn-row" style="justify-content:space-between"><button class="btn btn--lime" type="submit">Send message <span class="ic">{ic("arrow")}</span></button><p class="consent">We only use your details to reply to you.</p></div>
         <p class="form-status" role="status"></p>
