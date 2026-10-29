@@ -294,6 +294,7 @@ def page(slug, title, description, body, tone="dark", loader=False, extra_schema
 <link rel="stylesheet" href="{asset('assets/css/main.css')}">
 <script>document.documentElement.classList.replace("no-js","js");if("scrollRestoration"in history)history.scrollRestoration="manual";try{{if(sessionStorage.getItem("csp-pt")==="1"&&!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("pt-enter")}}catch(e){{}}</script>
 {ld}
+<script type="speculationrules">{{"prefetch":[{{"where":{{"and":[{{"selector_matches":"a[href$='.html'], a[href*='.html#']"}},{{"not":{{"selector_matches":"[target=_blank]"}}}}]}},"eagerness":"moderate"}}]}}</script>
 <script src="assets/vendor/gsap.min.js" defer></script>
 <script src="assets/vendor/ScrollTrigger.min.js" defer></script>
 <script src="{asset('assets/js/config.js')}" defer></script>
@@ -335,9 +336,13 @@ def art_bg():
 
 
 def rings():
-    return ('<svg class="hx-rings" viewBox="0 0 600 600" aria-hidden="true">'
-            '<circle class="r1" cx="300" cy="300" r="292"/><circle class="r2" cx="300" cy="300" r="246"/><circle class="r3" cx="300" cy="300" r="200"/>'
-            '<g class="orbit"><circle cx="300" cy="8" r="5"/></g></svg>')
+    # The turning parts (dashed ring, orbiting light) are their own <svg> boxes, so the GPU spins them
+    # without repainting; rotating a shape inside one SVG would redraw it on every frame.
+    return ('<div class="hx-rings" aria-hidden="true">'
+            '<svg viewBox="0 0 600 600"><circle class="r1" cx="300" cy="300" r="292"/><circle class="r3" cx="300" cy="300" r="200"/></svg>'
+            '<svg class="hx-spin hx-spin--r2" viewBox="0 0 600 600"><circle class="r2" cx="300" cy="300" r="246"/></svg>'
+            '<svg class="hx-spin hx-spin--orbit" viewBox="0 0 600 600"><g class="orbit"><circle cx="300" cy="8" r="5"/></g></svg>'
+            '</div>')
 
 
 def breath():

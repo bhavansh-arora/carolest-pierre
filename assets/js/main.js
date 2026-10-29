@@ -13,10 +13,13 @@
 
   // Pages always open at the top (unless a #section is requested), so a restored scroll can't tuck the hero under the header.
   if ("scrollRestoration" in history) history.scrollRestoration = "manual";
-  var toTop = function () { if (!location.hash) { window.scrollTo(0, 0); if (lenis) lenis.scrollTo(0, { immediate: true }); } };
+  // Instant, and only until the reader takes over: a late image load must never drag them back up.
+  var touched = false;
+  ["wheel", "touchstart", "keydown", "pointerdown"].forEach(function (t) { window.addEventListener(t, function () { touched = true; }, { passive: true, once: true }); });
+  var toTop = function () { if (!location.hash && !touched && window.scrollY) window.scrollTo({ top: 0, left: 0, behavior: "instant" }); };
   toTop();
   window.addEventListener("load", toTop);
-  window.addEventListener("pageshow", function (e) { if (e.persisted) toTop(); });
+  window.addEventListener("pageshow", function (e) { if (e.persisted) { touched = false; toTop(); } });
 
   doc.classList.remove("no-js");
   doc.classList.add("js");
@@ -57,8 +60,6 @@
     });
   }
 
-  // Native scrolling: immediate and familiar. (A smoothing library made the page feel like it was dragging.)
-  var lenis = null;
 
   /* ---------- Header ---------- */
   function header() {
@@ -107,7 +108,6 @@
       menu.setAttribute("aria-hidden", open ? "false" : "true");
       toggle.setAttribute("aria-expanded", open ? "true" : "false");
       doc.classList.toggle("menu-open", open);
-      if (lenis) open ? lenis.stop() : lenis.start();
       document.body.style.overflow = open ? "hidden" : "";
       // Move focus only for keyboard users, so a tap doesn't leave a focus ring on the button.
       if (viaKeys) { if (open) setTimeout(function () { closeBtn.focus(); }, 50); else toggle.focus(); }
@@ -225,21 +225,36 @@
   function scrubWords() {
     var els = $$("[data-scrub-words]");
     if (!els.length || reduced) return;
+    // Page positions are measured once (and again whenever the page's size changes), so scrolling
+    // itself never has to ask the browser for layout.
+    var boxes = [];
+    var measure = function () {
+      var sy = window.scrollY;
+      boxes = els.map(function (el) { var r = el.getBoundingClientRect(); return { top: r.top + sy, height: r.height }; });
+    };
     function update() {
-      var vh = window.innerHeight;
-      els.forEach(function (el) {
-        var r = el.getBoundingClientRect();
+      var vh = window.innerHeight, sy = window.scrollY;
+      els.forEach(function (el, k) {
+        var r = { top: boxes[k].top - sy, height: boxes[k].height };
         var words = el._w || (el._w = $$(".w", el));
         var p = (vh * 0.98 - r.top) / (r.height * 0.55 + vh * 0.3);
         p = Math.max(0, Math.min(1, p));
-        var lit = Math.round(p * words.length);
-        words.forEach(function (w, i) { w.classList.toggle("is-lit", i < lit); });
+        var lit = Math.round(p * words.length), was = el._lit || 0;
+        if (lit === was) return;
+        // Touch only the words between the old and new edge.
+        for (var i = Math.min(lit, was); i < Math.max(lit, was); i++) words[i].classList.toggle("is-lit", i < lit);
+        el._lit = lit;
       });
     }
     var queued = false;
     var onScroll = function () { if (!queued) { queued = true; requestAnimationFrame(function () { queued = false; update(); }); } };
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+    var remeasure = function () { measure(); onScroll(); };
+    window.addEventListener("resize", remeasure);
+    window.addEventListener("load", remeasure);
+    if ("ResizeObserver" in window) new ResizeObserver(remeasure).observe(document.body);
+    if (window.ScrollTrigger) window.ScrollTrigger.addEventListener("refresh", remeasure);
+    measure();
     update();
   }
 
@@ -253,7 +268,7 @@
       var amt = parseFloat(el.getAttribute("data-parallax")) || 10;
       gsap.fromTo(el, { yPercent: -amt / 2 }, {
         yPercent: amt / 2, ease: "none",
-        scrollTrigger: { trigger: el.closest("[data-parallax-root]") || el.parentElement, start: "top bottom", end: "bottom top", scrub: 1.2 }
+        scrollTrigger: { trigger: el.closest("[data-parallax-root]") || el.parentElement, start: "top bottom", end: "bottom top", scrub: 0.35 }
       });
     });
 
@@ -269,7 +284,7 @@
           x: function () { return -dist(); }, ease: "none",
           scrollTrigger: {
             trigger: wrap, start: "top top+=" + (window.innerHeight * 0.08), end: function () { return "+=" + dist(); },
-            pin: true, scrub: 0.6, invalidateOnRefresh: true, anticipatePin: 1,
+            pin: true, scrub: 0.3, invalidateOnRefresh: true, anticipatePin: 1,
             onUpdate: function (st) { if (bar) bar.style.width = (st.progress * 100) + "%"; }
           }
         });
@@ -281,13 +296,13 @@
     var hero = $(".hero-media");
     if (hero && finePointer) {
       var a = $(".hero-img--a", hero), b = $(".hero-img--b", hero);
+      var q = function (el, p) { return el ? gsap.quickTo(el, p, { duration: 1.2, ease: "power3.out" }) : function () {}; };
+      var ax = q(a, "x"), ay = q(a, "y"), bx = q(b, "x"), by = q(b, "y");
       hero.closest(".hero").addEventListener("mousemove", function (e) {
         var x = e.clientX / window.innerWidth - 0.5, y = e.clientY / window.innerHeight - 0.5;
-        if (a) gsap.to(a, { x: x * -14, y: y * -10, duration: 1.2, ease: "power3.out" });
-        if (b) gsap.to(b, { x: x * 22, y: y * 16, duration: 1.2, ease: "power3.out" });
-      });
+        ax(x * -14); ay(y * -10); bx(x * 22); by(y * 16);
+      }, { passive: true });
     }
-    window.addEventListener("load", function () { window.ScrollTrigger.refresh(); });
   }
 
   /* ---------- Native horizontal scrollers: buttons + drag + progress ---------- */
@@ -716,7 +731,7 @@
         if (msg) msg.value = root.getAttribute("data-summary") + "\n\n";
         var target = document.getElementById("inquiry");
         if (target) {
-          if (lenis) lenis.scrollTo(target, { offset: -90 }); else target.scrollIntoView({ behavior: reduced ? "auto" : "smooth" });
+          target.scrollIntoView({ behavior: reduced ? "auto" : "smooth" });
           setTimeout(function () { var f = target.querySelector("input"); if (f) f.focus({ preventScroll: true }); }, 900);
         }
       });
@@ -759,12 +774,21 @@
   function magnetic() {
     if (!finePointer || reduced) return;
     $$(".btn, .svc .arrow, .round-btns button").forEach(function (el) {
+      var r = null, ex = 0, ey = 0, raf = 0;
+      var paint = function () {
+        raf = 0;
+        if (!r) return;
+        el.style.transform = "translate(" + (ex - r.left - r.width / 2) * 0.18 + "px," + (ey - r.top - r.height / 2) * 0.3 + "px)";
+      };
+      // Measure with the pull removed, so the rect is the button's true resting place.
+      el.addEventListener("mouseenter", function () { el.style.transform = ""; r = el.getBoundingClientRect(); });
       el.addEventListener("mousemove", function (e) {
-        var r = el.getBoundingClientRect();
-        var x = (e.clientX - r.left - r.width / 2) * 0.18, y = (e.clientY - r.top - r.height / 2) * 0.3;
-        el.style.transform = "translate(" + x + "px," + y + "px)";
-      });
-      el.addEventListener("mouseleave", function () { el.style.transform = ""; });
+        if (!r) r = el.getBoundingClientRect();
+        ex = e.clientX; ey = e.clientY;
+        if (!raf) raf = requestAnimationFrame(paint);
+      }, { passive: true });
+      el.addEventListener("mouseleave", function () { r = null; if (raf) { cancelAnimationFrame(raf); raf = 0; } el.style.transform = ""; });
+      window.addEventListener("scroll", function () { r = null; }, { passive: true });
     });
   }
 
@@ -830,13 +854,18 @@
     c.className = "cursor"; c.setAttribute("aria-hidden", "true");
     c.innerHTML = "<span></span>";
     document.body.appendChild(c);
-    var label = c.firstChild, x = -100, y = -100, cx = x, cy = y;
-    (function loop() {
-      cx += (x - cx) * 0.22; cy += (y - cy) * 0.22;
+    var label = c.firstChild, x = -100, y = -100, cx = x, cy = y, raf = 0;
+    var loop = function () {
+      cx += (x - cx) * 0.42; cy += (y - cy) * 0.42;
+      if (Math.abs(x - cx) < 0.1 && Math.abs(y - cy) < 0.1) { cx = x; cy = y; raf = 0; }
+      else raf = requestAnimationFrame(loop);
       c.style.transform = "translate3d(" + cx.toFixed(1) + "px," + cy.toFixed(1) + "px,0)";
-      requestAnimationFrame(loop);
-    })();
-    window.addEventListener("mousemove", function (e) { x = e.clientX; y = e.clientY; c.classList.add("is-on"); }, { passive: true });
+    };
+    window.addEventListener("mousemove", function (e) {
+      x = e.clientX; y = e.clientY;
+      if (!c.classList.contains("is-on")) { cx = x; cy = y; c.classList.add("is-on"); }
+      if (!raf) raf = requestAnimationFrame(loop);
+    }, { passive: true });
     document.addEventListener("mouseleave", function () { c.classList.remove("is-on"); });
     document.addEventListener("mouseover", function (e) {
       var t = e.target.closest("[data-cursor], a, button, summary, label, input, select, textarea");
@@ -864,12 +893,14 @@
       ptEntered = new Promise(function (resolve) {
         pt.classList.add("is-cover");
         doc.classList.remove("pt-enter");
-        // Hold the brand a beat, then lift the cover away.
-        setTimeout(function () {
-          pt.classList.add("is-exit");
-          resolve();
-          setTimeout(function () { pt.classList.add("no-anim"); pt.classList.remove("is-cover", "is-exit"); void pt.offsetWidth; pt.classList.remove("no-anim"); }, 950);
-        }, 380);
+        // Hold the brand a beat (once the first frame is painted), then lift the cover away.
+        requestAnimationFrame(function () {
+          setTimeout(function () {
+            pt.classList.add("is-exit");
+            resolve();
+            setTimeout(function () { pt.classList.add("no-anim"); pt.classList.remove("is-cover", "is-exit"); void pt.offsetWidth; pt.classList.remove("no-anim"); }, 700);
+          }, 140);
+        });
       });
     }
     if (reduced) return;
@@ -887,18 +918,48 @@
       $("[data-pt-to]", pt).textContent = PT_LABELS[dest] || "";
       try { sessionStorage.setItem("csp-pt", "1"); } catch (err) {}
       var go = function () { location.href = href; };
-      var timer = setTimeout(go, 900);
+      var timer = setTimeout(go, 650);
       pt.addEventListener("transitionend", function te(ev) {
         if (ev.target !== pt || ev.propertyName !== "clip-path") return;
         pt.removeEventListener("transitionend", te);
         clearTimeout(timer);
-        setTimeout(go, 120);
+        go();
       });
       pt.classList.add("is-leaving");
     });
     window.addEventListener("pageshow", function (ev) {
       if (ev.persisted) { leaving = false; pt.classList.add("no-anim"); pt.className = "pt"; }
     });
+  }
+
+  /* ---------- Prefetch internal pages on hover/touch (browsers without speculation rules) ---------- */
+  function prefetch() {
+    if (HTMLScriptElement.supports && HTMLScriptElement.supports("speculationrules")) return;
+    var rel = document.createElement("link").relList;
+    if (!rel || !rel.supports || !rel.supports("prefetch")) return;
+    var done = {};
+    var warm = function (e) {
+      var a = e.target.closest && e.target.closest("a[href]");
+      if (!a) return;
+      var href = a.getAttribute("href").split("#")[0];
+      if (!/^[a-z0-9-]+\.html$/i.test(href) || done[href] || href === (location.pathname.split("/").pop() || "index.html")) return;
+      done[href] = 1;
+      var l = document.createElement("link"); l.rel = "prefetch"; l.href = href; document.head.appendChild(l);
+    };
+    document.addEventListener("pointerover", warm, { passive: true });
+    document.addEventListener("touchstart", warm, { passive: true });
+    document.addEventListener("focusin", warm);
+  }
+
+  /* ---------- Auto-scrolling strips: load every photo before the strip arrives ---------- */
+  function eagerStrips() {
+    var strips = $$(".ribbon, .marquee, .partners-mask");
+    var load = function (el) { $$('img[loading="lazy"]', el).forEach(function (img) { img.loading = "eager"; }); };
+    if (!("IntersectionObserver" in window)) { strips.forEach(load); return; }
+    var io = new IntersectionObserver(function (en) {
+      en.forEach(function (x) { if (x.isIntersecting) { load(x.target); io.unobserve(x.target); } });
+    }, { rootMargin: "800px 0px" });
+    strips.forEach(function (el) { io.observe(el); });
   }
 
   /* ---------- Photo sliders: autoplay while visible, swipe, dots ---------- */
@@ -951,6 +1012,8 @@
 
   /* ---------- Boot ---------- */
   transitions();
+  prefetch();
+  eagerStrips();
   splitLines();
   archHero();
   sliders();
