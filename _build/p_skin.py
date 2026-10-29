@@ -1,4 +1,4 @@
-from csp import (cta_band, ic, img, menu_layout, note, page, phero, price_row, sec_head, team_strip)
+from csp import (ribbon, cta_band, ic, img, menu_layout, note, page, phero, price_row, sec_head, team_strip)
 
 WAX = [  # area, wax, sugar, threading
     ("Eyebrow clean-up", "$25", "", "$25"), ("Eyebrow line shaping", "$28", "", ""), ("Upper lip", "$20", "$23", "$18"),
@@ -91,10 +91,10 @@ def groups():
 </div>'''
 
     return [
-        ("facials", "Facials", "Éminence <em>facials</em>", "Organic, results-focused facials with an incredibly fresh aroma, delivered by estheticians with up to 20 years of experience.", None, facials),
-        ("waxing", "Hair removal", "Wax, sugar <em>&amp; threading</em>", "", None, wax),
-        ("nails", "Nails", "Manicures <em>&amp; pedicures</em>", "", "nails", nails),
-        ("lashes", "Lashes", "Lashes <em>&amp; brows</em>", "", None, lashes),
+        ("facials", "Facials", "Éminence <em>facials</em>", "Organic, results-focused facials with an incredibly fresh aroma, delivered by estheticians with up to 20 years of experience.", ["facial-wide", "facial-hands", "facial-white-2"], facials),
+        ("waxing", "Hair removal", "Wax, sugar <em>&amp; threading</em>", "", ["sugaring", "brows"], wax),
+        ("nails", "Nails", "Manicures <em>&amp; pedicures</em>", "", ["nails", "pedicure", "hand-cream"], nails),
+        ("lashes", "Lashes", "Lashes <em>&amp; brows</em>", "", ["lashes", "brows", "facial-white"], lashes),
         ("tan", "Spray tan", "Sunless <em>glow</em>", "", None, tan),
     ]
 
@@ -113,6 +113,6 @@ def build():
   </div>
 </section>'''
     team = team_strip(["melanie", "rebecca", "anna-rose", "aarti", "mary", "maelie", "emma", "happy"], "02", "The hands <em class='accent'>your skin trusts.</em>")
-    body = "\n".join([hero, menu, team, cta_band("Your glow, <em>booked.</em>")])
+    body = "\n".join([hero, ribbon(['facial-hands', 'nails', 'lashes', 'facial-white', 'brows', 'pedicure', 'led', 'hand-cream', 'facial-wide']), menu, team, cta_band("Your glow, <em>booked.</em>")])
     return page("skin.html", "Facials, Nails, Lashes & Waxing in Vaudreuil-Dorion | Carole St-Pierre salon & spa",
                 "Éminence Organics facials, manicures and pedicures, lash extensions, waxing, sugaring, threading and spray tans at Carole St-Pierre salon & spa in Vaudreuil-Dorion.", body)

@@ -1,6 +1,6 @@
 import json
 
-from csp import (cta_band, ic, img, menu_layout, note, page, phero, price_row, sec_head, team_strip)
+from csp import (ribbon, cta_band, ic, img, menu_layout, note, page, phero, price_row, sec_head, team_strip)
 
 MASSAGES = [
     ("Swedish (relaxation)", "Relaxing, all-encompassing body massage. Deep rest for mind and body.", {"60": 105, "90": 140, "120": 190}, ""),
@@ -69,9 +69,9 @@ def groups():
   </div>
 </div>'''
     return [
-        ("massage", "Massages", "Massage <em>therapy</em>", "Fifteen-plus techniques, one for every need and personality. Toggle the duration to compare prices.", "massage-therapeutic", massage),
-        ("body", "Body treatments", "Body <em>treatments</em>", "", "balneo", body),
-        ("wood", "Wood therapy", "Wood <em>therapy</em>", "", "wood-therapy", wood),
+        ("massage", "Massages", "Massage <em>therapy</em>", "Fifteen-plus techniques, one for every need and personality. Toggle the duration to compare prices.", ["massage-therapeutic", "lomi", "aromatic", "reflexology"], massage),
+        ("body", "Body treatments", "Body <em>treatments</em>", "", ["balneo", "wrap", "back-massage-white"], body),
+        ("wood", "Wood therapy", "Wood <em>therapy</em>", "", ["wood-therapy", "massage-hands"], wood),
     ]
 
 
@@ -97,6 +97,6 @@ def build():
   </div>
 </section>'''
     team = team_strip(["genevieve", "christine", "gisela", "mila", "myriam", "yadira", "happy"], "02", "Strong hands, <em class='accent'>gentle souls.</em>")
-    body = "\n".join([hero, good, menu, team, cta_band("Book your <em>moment of calm.</em>")])
+    body = "\n".join([hero, good, ribbon(['hot-stones', 'massage-hands', 'lomi', 'aromatic', 'reflexology', 'balneo', 'wrap', 'head-massage', 'back-massage-white']), menu, team, cta_band("Book your <em>moment of calm.</em>")])
     return page("massage.html", "Massage Therapy in Vaudreuil-Dorion | Swedish, Hot Stone, Lomi Lomi | Carole St-Pierre",
                 "Massage therapy in Vaudreuil-Dorion, 7 days a week: Swedish, therapeutic, hot stone, Lomi Lomi, prenatal, reflexology and lymphatic drainage, plus wraps, balneotherapy and wood therapy.", body)

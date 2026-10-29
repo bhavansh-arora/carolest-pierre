@@ -1,5 +1,5 @@
 from content import TEAM, TEAM_CATS
-from csp import (BOOK, EMAIL, E, btn, cta_band, cut, ic, img, page, phero, sec_head)
+from csp import (ribbon, BOOK, EMAIL, E, btn, cta_band, cut, ic, img, page, phero, sec_head)
 
 CAT_LABEL = dict(TEAM_CATS)
 
@@ -75,6 +75,6 @@ def build():
                  [("Leadership", "45+ years"), ("Professionals", "35+"), ("Disciplines", "Hair · skin · body"), ("Languages", "FR · EN · +8")],
                  [("leadership", "Leadership"), ("specialists", "All specialists")], tag="10 languages spoken",
                  cta=f'<div class="btn-row">{btn("Book by name", BOOK, "lime", ext=True)}{btn("Filter the team", "#specialists", "ghost")}</div>')
-    body = "\n".join([hero, leadership(), grid(), join(), cta_band("Book with <em>your favourite.</em>")])
+    body = "\n".join([hero, leadership(), ribbon(['salon-floor', 'hair-styling', 'facial-hands', 'massage-hands', 'lashes', 'nails', 'salon-reception', 'laser']), grid(), join(), cta_band("Book with <em>your favourite.</em>")])
     return page("team.html", "Our Team | Stylists, Estheticians & Massage Therapists | Carole St-Pierre salon & spa",
                 "Meet the 35+ specialists of Carole St-Pierre salon & spa in Vaudreuil-Dorion: Aveda stylists and colourists, estheticians, laser technicians and massage therapists.", body)

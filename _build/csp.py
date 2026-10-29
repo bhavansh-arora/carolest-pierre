@@ -164,7 +164,7 @@ def header(current, tone):
     </ul>
     <div class="nav-actions">
       <a class="nav-phone" href="{TEL}">{PHONE}</a>
-      <span class="nav-book">{btn("Book now", BOOK, "lime", ext=True, small=True)}</span>
+      <span class="nav-book">{btn("Book now", BOOK, "lime", ext=True, small=True)}<a class="nav-book-sm" href="{BOOK}" target="_blank" rel="noopener">Book</a></span>
       <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="menu">Menu <span class="bars"><i></i><i></i></span></button>
     </div>
   </nav>
@@ -225,12 +225,7 @@ def footer():
       <div class="socials"><a href="{INSTAGRAM}" target="_blank" rel="noopener" aria-label="Instagram">{ic("instagram")}</a><a href="{FACEBOOK}" target="_blank" rel="noopener" aria-label="Facebook">{ic("facebook")}</a></div>
     </div>
   </div>
-</footer>
-<nav class="mbar" aria-label="Quick actions">
-  <a href="{TEL}">{ic("phone")} Call</a>
-  <a class="is-primary" href="{BOOK}" target="_blank" rel="noopener">{ic("calendar")} Book now</a>
-  <a href="{MAPS}" target="_blank" rel="noopener">{ic("pin")} Directions</a>
-</nav>'''
+</footer>'''
 
 
 def schema():
@@ -426,7 +421,10 @@ def menu_layout(groups, label="Menu sections"):
     nav = "".join(f'<a href="#{gid}"><span>{E(short)}</span><span class="n">{i:02d}</span></a>' for i, (gid, short, *_r) in enumerate(groups, 1))
     out = []
     for i, (gid, short, title, intro, image, content) in enumerate(groups, 1):
-        media = f'<div class="menu-group-media" data-reveal="clip">{img(image, "", "(min-width: 1024px) 70vw, 100vw")}</div>' if image else ""
+        if isinstance(image, (list, tuple)):
+            media = slider(image, "menu-group-media")
+        else:
+            media = f'<div class="menu-group-media" data-reveal="clip">{img(image, "", "(min-width: 1024px) 70vw, 100vw")}</div>' if image else ""
         intro_html = f'<p class="lead">{intro}</p>' if intro else ""
         out.append(f'''<section class="menu-group" id="{gid}" aria-labelledby="{gid}-t">
   {media}
@@ -482,3 +480,20 @@ def cut(name, alt="", cls="", eager=False, style=""):
     st = f' style="{style}"' if style else ""
     return f'<img src="assets/img/cut/{name}.webp" width="{w}" height="{h}" alt="{E(alt)}"{load}{c}{st}>'
 
+
+
+def slider(images, cls="", sizes="(min-width: 1024px) 70vw, 100vw"):
+    """Auto-advancing photo slider: slow crossfade with a gentle settle, progress dots, swipeable."""
+    if len(images) == 1:
+        return f'<div class="{cls}" data-reveal="clip">{img(images[0], "", sizes)}</div>'
+    figs = "".join(f'<figure class="gs{" is-active" if i == 0 else ""}">{img(n, "", sizes)}</figure>' for i, n in enumerate(images))
+    dots = "".join(f'<button type="button" aria-label="Photo {i + 1}"{" class=is-active" if i == 0 else ""}><i></i></button>' for i in range(len(images)))
+    return f'<div class="gslide {cls}" data-gslide data-reveal="curtain">{figs}<div class="gs-dots">{dots}</div></div>'
+
+
+def ribbon(images, reverse=False):
+    """A slow, endless strip of photos between text-heavy sections."""
+    figs = "".join(f'<figure class="rb rb--{"t" if i % 3 == 1 else "w"}">{img(n, "", "40vw")}</figure>' for i, n in enumerate(images))
+    return f'''<section class="ribbon{" ribbon--rev" if reverse else ""}" aria-hidden="true">
+  <div class="ribbon-track">{figs}{figs}</div>
+</section>'''

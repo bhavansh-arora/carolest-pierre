@@ -1,4 +1,4 @@
-from csp import (btn, BOOK, TEL, PHONE, cta_band, ic, img, menu_layout, note, page, phero, price_row, sec_head, team_strip)
+from csp import (ribbon, btn, BOOK, TEL, PHONE, cta_band, ic, img, menu_layout, note, page, phero, price_row, sec_head, team_strip)
 
 LASER = [  # zone, price, group
     ("Upper lip", 70, "Face"), ("Chin", 70, "Face"), ("Lip &amp; chin", 100, "Face"), ("Cheeks", 85, "Face"), ("Face &amp; cheeks", 135, "Face"),
@@ -88,10 +88,10 @@ def groups():
 </div>
 {note("Permanent makeup by Sylvie Dallaire.")}'''
     return [
-        ("laser", "Laser hair removal", "Laser <em>hair removal</em>", "", None, laser),
-        ("photorejuvenation", "Photorejuvenation", "Light-based <em>skin care</em>", "", None, photo),
+        ("laser", "Laser hair removal", "Laser <em>hair removal</em>", "", ["laser", "facial-white-2"], laser),
+        ("photorejuvenation", "Photorejuvenation", "Light-based <em>skin care</em>", "", ["photorejuvenation", "led"], photo),
         ("mesotherapy", "Mesotherapy", "Mesotherapy <em>&amp; microdermabrasion</em>", "", None, meso),
-        ("peels", "Peels & O2", "Clinical peels <em>&amp; oxygen</em>", "", None, peels),
+        ("peels", "Peels & O2", "Clinical peels <em>&amp; oxygen</em>", "", ["peel", "led", "facial-white"], peels),
         ("pmu", "Permanent makeup", "Permanent <em>makeup</em>", "", None, pmu),
     ]
 
@@ -111,6 +111,6 @@ def build():
   </div>
 </section>'''
     team = team_strip(["carole", "karolyne", "maelie", "aarti", "mary"], "02", "Licensed hands, <em class='accent'>expert eyes.</em>")
-    body = "\n".join([hero, menu, team, cta_band("Start with a <em>consultation.</em>", "Tell us your goals and we'll build a plan: the right technology, the right number of sessions, and honest expectations.")])
+    body = "\n".join([hero, ribbon(['laser', 'microneedling', 'photorejuvenation', 'peel', 'led', 'facial-white-2', 'facial-white']), menu, team, cta_band("Start with a <em>consultation.</em>", "Tell us your goals and we'll build a plan: the right technology, the right number of sessions, and honest expectations.")])
     return page("medispa.html", "Medispa & Laser Hair Removal in Vaudreuil-Dorion | Carole St-Pierre salon & spa",
                 "Cynosure Elite+ laser hair removal for all skin types, photorejuvenation, mesotherapy with exosomes, microdermabrasion, Image peels and permanent makeup in Vaudreuil-Dorion.", body)

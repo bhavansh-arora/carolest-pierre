@@ -1,5 +1,5 @@
 from content import WEDDING_REVIEW
-from csp import (EMAIL, PHONE, TEL, E, btn, faq, ic, img, lines, page, phero, price_row, sec_head)
+from csp import (ribbon, EMAIL, PHONE, TEL, E, btn, faq, ic, img, lines, page, phero, price_row, sec_head)
 
 
 def approach():
@@ -239,6 +239,6 @@ def build():
                  [("approach", "Approach"), ("menu", "Bridal menu"), ("quote", "Quote builder"), ("gallery", "Gallery"), ("faq", "FAQ"), ("inquiry", "Inquire")],
                  tag="Now booking wedding season",
                  cta=f'<div class="btn-row">{btn("Build my quote", "#quote", "lime")}{btn("Ask about my date", "#inquiry", "ghost")}</div>')
-    body = "\n".join([hero, approach(), process(), menu(), quote(), gallery(), testimonial(), bridal_faq(), inquiry()])
+    body = "\n".join([hero, approach(), ribbon(['bridal-look-1', 'bridal-updo', 'bridal-bouquet', 'bridal-look-2', 'bridal-curls', 'bridal-jewel', 'bridal-look-3', 'bridal-brunette']), process(), menu(), quote(), gallery(), testimonial(), bridal_faq(), inquiry()])
     return page("weddings.html", "Wedding Hair & Makeup in Vaudreuil-Dorion | Carole St-Pierre salon & spa",
                 "Bridal hair and makeup in Vaudreuil-Dorion: trials, the whole wedding party, and on-location Beauty in Action within 15 km. Build your quote online.", body)

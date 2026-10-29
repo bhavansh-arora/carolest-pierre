@@ -1,5 +1,5 @@
 from content import REVIEWS, RITUALS, TEAM
-from csp import (art_bg, breath, rings, cut, phone_mock, ritual_title, BOOK, GIFT, APPLE, GOOGLE_PLAY, REVIEW_GOOGLE, E, btn, book_btn, cta_band, ic, img, lines,
+from csp import (ribbon, art_bg, breath, rings, cut, phone_mock, ritual_title, BOOK, GIFT, APPLE, GOOGLE_PLAY, REVIEW_GOOGLE, E, btn, book_btn, cta_band, ic, img, lines,
                   page, review_card, sec_head)
 
 
@@ -292,7 +292,7 @@ def promo():
 
 
 def build():
-    body = "\n".join([hero(), partners(), statement(), services(), rituals(), expand(), promise(), bridal(), finder(), reviews(), team(), promo(),
+    body = "\n".join([hero(), partners(), statement(), services(), rituals(), expand(), promise(), bridal(), finder(), ribbon(['hair-styling', 'facial-hands', 'hot-stones', 'bridal-curls', 'nails', 'aveda-jungle', 'lashes', 'ritual-scalp', 'balneo']), reviews(), team(), promo(),
                       cta_band(image="head-massage")])
     return page("index.html", "Carole St-Pierre salon & spa | Aveda hair salon & spa in Vaudreuil-Dorion",
                 "Aveda Concept hair salon and eco-responsible spa in Vaudreuil-Dorion: hair, facials, massage, laser, medical aesthetics and bridal styling. Open 7 days. Book online.",

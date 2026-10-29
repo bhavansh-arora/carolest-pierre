@@ -93,14 +93,13 @@
     if ("ResizeObserver" in window) new ResizeObserver(measure).observe(navBar);
     window.addEventListener("resize", measure);
     var lastY = window.scrollY;
-    var bar = $(".mbar");
     function onScroll() {
       var y = window.scrollY;
       h.classList.toggle("is-solid", y > 40);
       var menuOpen = doc.classList.contains("menu-open");
       if (!menuOpen) h.classList.toggle("is-hidden", y > 480 && y > lastY + 4);
       if (y < lastY - 4) h.classList.remove("is-hidden");
-      if (bar) bar.classList.toggle("is-shown", y > 360);
+      doc.classList.toggle("hdr-hidden", h.classList.contains("is-hidden"));
       lastY = y;
     }
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -926,9 +925,38 @@
     window.addEventListener("pageshow", function (ev) { if (ev.persisted) pt.className = "pt"; });
   }
 
+  /* ---------- Photo sliders: autoplay while visible, swipe, dots ---------- */
+  function sliders() {
+    $$("[data-gslide]").forEach(function (el) {
+      var figs = $$(".gs", el), dots = $$(".gs-dots button", el);
+      var i = 0, timer = null, visible = false, DUR = 5200;
+      el.style.setProperty("--gs-dur", DUR + "ms");
+      var go = function (n) {
+        i = (n + figs.length) % figs.length;
+        figs.forEach(function (f, k) { f.classList.toggle("is-active", k === i); });
+        dots.forEach(function (d, k) { d.classList.remove("is-active"); d.classList.toggle("is-done", k < i); });
+        void el.offsetWidth; if (dots[i]) dots[i].classList.add("is-active");
+      };
+      var play = function () { clearInterval(timer); if (visible && !reduced) timer = setInterval(function () { go(i + 1); }, DUR); };
+      dots.forEach(function (d, k) { d.addEventListener("click", function () { go(k); play(); }); });
+      var sx = null;
+      el.addEventListener("pointerdown", function (e) { sx = e.clientX; });
+      el.addEventListener("pointerup", function (e) { if (sx === null) return; var dx = e.clientX - sx; sx = null; if (Math.abs(dx) > 40) { go(i + (dx < 0 ? 1 : -1)); play(); } });
+      el.addEventListener("mouseenter", function () { el.classList.add("is-paused"); clearInterval(timer); });
+      el.addEventListener("mouseleave", function () { el.classList.remove("is-paused"); go(i); play(); });
+      if ("IntersectionObserver" in window) {
+        new IntersectionObserver(function (en) {
+          visible = en[0].isIntersecting;
+          if (visible) { go(i); play(); } else clearInterval(timer);
+        }, { threshold: 0.3 }).observe(el);
+      } else { visible = true; play(); }
+    });
+  }
+
   /* ---------- Boot ---------- */
   splitLines();
   archHero();
+  sliders();
   expandImage();
   cursor();
   transitions();

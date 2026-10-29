@@ -35,6 +35,7 @@ python3 _build/build.py
 - **Prices, team, rituals, reviews, FAQ:** `_build/content.py` (plus per-page menus in `_build/p_*.py`)
 - **Shared header, footer, contact details, booking links:** `_build/csp.py`
 - **Wedding quote builder prices:** `QB_ITEMS` in `assets/js/main.js`
+- **Photo ribbons and section sliders:** `ribbon([...])` and the image lists in each page's menu groups (`_build/p_*.py`)
 - **Form destination, hours used by the live "open now" status:** `assets/js/config.js`
 - **Design tokens (colours, type, spacing):** top of `assets/css/main.css`
 - **Images:** `python3 _build/images.py <folder-of-originals>` regenerates the WebP files in `assets/img/`

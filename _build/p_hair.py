@@ -1,4 +1,4 @@
-from csp import (btn, cta_band, ic, img, menu_layout, note, page, phero, price_row, ritual_steps, sec_head, team_strip)
+from csp import (ribbon, btn, cta_band, ic, img, menu_layout, note, page, phero, price_row, ritual_steps, sec_head, team_strip)
 
 
 def groups():
@@ -54,12 +54,12 @@ def groups():
 </div>
 {note("Rates vary with the makeup artist's level of experience.")}'''
     return [
-        ("cut", "Cut & style", "Cut <em>&amp; style</em>", "", "aveda-bob", cut),
-        ("styling", "Styling", "Blow-dry <em>&amp; updos</em>", "", None, style),
-        ("colour", "Colour", "Colour <em>by Aveda</em>", "", "hair-show", colour),
+        ("cut", "Cut & style", "Cut <em>&amp; style</em>", "", ["aveda-bob", "hair-styling", "aveda-folk"], cut),
+        ("styling", "Styling", "Blow-dry <em>&amp; updos</em>", "", ["bridal-updo", "platinum", "bridal-curls"], style),
+        ("colour", "Colour", "Colour <em>by Aveda</em>", "", ["hair-show", "botanical-leaf", "platinum"], colour),
         ("perm", "Perms", "Soft <em>perms</em>", "", None, perm),
         ("treatments", "Treatments", "Hair <em>treatments</em>", "", None, care),
-        ("makeup", "Makeup", "Makeup <em>for events</em>", "", "bridal-makeup-artist", makeup),
+        ("makeup", "Makeup", "Makeup <em>for events</em>", "", ["bridal-makeup-artist", "bridal-look-5", "bridal-look-2"], makeup),
     ]
 
 
@@ -95,6 +95,6 @@ def build():
   </div>
 </section>'''
     team = team_strip(["jeff", "christelle", "vivian", "dorianne", "thea", "heidi", "kim"], "03", "Stylists guests <em class='accent'>follow for years.</em>")
-    body = "\n".join([hero, steps, menu, levels, team, cta_band("Ready for <em>your new look?</em>")])
+    body = "\n".join([hero, steps, ribbon(['hair-styling', 'aveda-bob', 'botanical-leaf', 'platinum', 'hair-show', 'aveda-folk', 'ritual-scalp', 'bridal-updo']), menu, levels, team, cta_band("Ready for <em>your new look?</em>")])
     return page("hair.html", "Aveda Hair Salon in Vaudreuil-Dorion | Cuts, Colour & Treatments | Carole St-Pierre",
                 "Aveda Concept hair salon in Vaudreuil-Dorion: women's, men's and kids' cuts, plant-powered colour with 100% grey coverage, highlights, Botanical Repair and event makeup.", body)

@@ -1,5 +1,5 @@
 from content import FAQ_GENERAL
-from csp import (ADDRESS, BOOK, CITY, EMAIL, HOURS, MAPS, PHONE, TEL, btn, cta_band, faq, ic, page, phero, sec_head)
+from csp import (ribbon, ADDRESS, BOOK, CITY, EMAIL, HOURS, MAPS, PHONE, TEL, btn, cta_band, faq, ic, page, phero, sec_head)
 
 
 def contact():
@@ -94,7 +94,7 @@ def build():
                  [("Address", "3210 boul. de la Gare, suite 170"), ("Phone", PHONE), ("Today", '<span class="status" data-open-status="short"></span>'), ("Parking", "Easy, on site")],
                  [("contact", "Hours &amp; map"), ("message", "Write to us"), ("faq", "FAQ"), ("policies", "Policies")], tag="Vaudreuil-Dorion",
                  cta=f'<div class="btn-row">{btn("Get directions", MAPS, "lime", ext=True, icon="pin")}{btn("Call " + PHONE, TEL, "ghost", icon="phone")}</div>')
-    body = "\n".join([hero, contact(), form(), faq_section(), policies(), cta_band()])
+    body = "\n".join([hero, ribbon(['salon-exterior', 'salon-reception', 'balneo', 'hair-styling', 'head-massage', 'salon-floor', 'nails']), contact(), form(), faq_section(), policies(), cta_band()])
     faq_schema = {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [
         {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a.replace("<p>", "").replace("</p>", "")}} for q, a in FAQ_GENERAL]}
     return page("visit.html", "Contact, Hours & FAQ | Carole St-Pierre salon & spa, Vaudreuil-Dorion",
