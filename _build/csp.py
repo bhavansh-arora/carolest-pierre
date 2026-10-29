@@ -318,32 +318,50 @@ PAGE_NO = {"Weddings": "02", "Hair &amp; Makeup": "03", "Skin &amp; Esthetics": 
            "Spa rituals": "07", "Team": "08", "About": "09", "Visit": "10"}
 
 
+LEAF = ('<path d="M12 46C10 28 20 10 46 4c2 24-10 40-34 42Z"/><path d="M12 46C20 32 30 20 44 7"/>'
+        '<path d="M20 34c5 1 10 0 14-3M17 26c3 2 9 2 13 0"/>')
+
+
+def art_bg():
+    """Soft glows and drifting botanical line art behind a hero."""
+    leaves = "".join(f'<svg class="leaf leaf--{i}" viewBox="0 0 50 50" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">{LEAF}</svg>' for i in range(1, 5))
+    return f'<div class="hx-bg" aria-hidden="true"><span class="hx-glow hx-glow--a"></span><span class="hx-glow hx-glow--b"></span>{leaves}</div>'
+
+
+def rings():
+    return ('<svg class="hx-rings" viewBox="0 0 600 600" aria-hidden="true">'
+            '<circle class="r1" cx="300" cy="300" r="292"/><circle class="r2" cx="300" cy="300" r="246"/><circle class="r3" cx="300" cy="300" r="200"/>'
+            '<g class="orbit"><circle cx="300" cy="8" r="5"/></g></svg>')
+
+
+def breath():
+    return ('<div class="hx-breath" aria-hidden="true"><span class="hx-breath-ring"><i></i></span>'
+            '<span class="hx-breath-txt"><small>Take a moment</small><strong data-breath>Breathe in</strong></span></div>')
+
+
 def phero(crumb, title_lines, lead, image, alt, facts, jumps=None, tag="", cta=None, focus="50% 50%"):
-    """Inner-page hero: a framed full-bleed photograph with the title set over its calm lower third."""
+    """Inner-page hero: the title beside an arch-framed photograph, on the olive ground."""
     facts_html = "".join(f"<div><dt>{k}</dt><dd>{v}</dd></div>" for k, v in facts)
-    cta_html = cta if cta is not None else f'<div class="btn-row">{book_btn()}{btn("Call " + PHONE, TEL, "glass", icon="phone")}</div>'
+    cta_html = cta if cta is not None else f'<div class="btn-row">{book_btn()}{btn("Call " + PHONE, TEL, "ghost", icon="phone")}</div>'
     no = PAGE_NO.get(crumb, "")
     jump_html = ""
     if jumps:
         jump_html = ('<nav class="jumpbar" aria-label="On this page"><div class="container jumpbar-in"><span class="eyebrow">On this page</span>'
                      + "".join(f'<a href="#{a}">{t}</a>' for a, t in jumps) + "</div></nav>")
-    return f'''<section class="frame hero3 hero3--page" data-parallax-root>
-  <div class="hero3-media"><figure class="hero3-slide is-active">{img(image, alt, "100vw", eager=True, style="object-position:" + focus)}</figure></div>
-  <div class="hero3-shade" aria-hidden="true"></div>
-  <div class="hero3-inner">
-    <div class="hero3-top" data-reveal="fade">
-      <div class="crumbs"><a href="index.html">Home</a><span>/</span><span>{crumb}</span><span class="crumbs-no">{no} / 10</span></div>
-      <aside class="hero3-card hero3-facts" data-reveal style="--d:.5s">
-        {f'<span class="eyebrow"><span class="dot"></span> {tag}</span>' if tag else ""}
-        <dl>{facts_html}</dl>
-      </aside>
+    return f'''<section class="frame hx hx--page grain">
+  {art_bg()}
+  <div class="hx-inner">
+    <div class="hx-copy">
+      <div class="crumbs" data-reveal="fade"><a href="index.html">Home</a><span>/</span><span>{crumb}</span><span class="crumbs-no">{no} / 10</span></div>
+      <h1 class="hx-title" data-split>{lines(*title_lines)}</h1>
+      <p class="hx-lead" data-reveal style="--d:.45s">{lead}</p>
+      <div data-reveal style="--d:.55s">{cta_html}</div>
+      <dl class="hx-facts" data-reveal style="--d:.65s">{facts_html}</dl>
     </div>
-    <div class="hero3-bottom">
-      <div class="hero3-copy">
-        <h1 class="hero3-title" data-split>{lines(*title_lines)}</h1>
-        <p class="hero3-lead" data-reveal style="--d:.25s">{lead}</p>
-      </div>
-      <div class="hero3-actions" data-reveal style="--d:.35s">{cta_html}</div>
+    <div class="hx-art" data-hx-art>
+      {rings()}
+      <div class="hx-arch" data-depth="-10"><figure class="hx-slide is-active">{img(image, alt, "(min-width: 1000px) 34vw, 78vw", eager=True, style="object-position:" + focus)}</figure>
+        {f'<span class="hx-cap"><span class="dot"></span> {tag}</span>' if tag else ""}</div>
     </div>
   </div>
 </section>

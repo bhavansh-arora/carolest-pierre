@@ -1,44 +1,43 @@
 from content import REVIEWS, RITUALS, TEAM
-from csp import (cut, phone_mock, ritual_title, BOOK, GIFT, APPLE, GOOGLE_PLAY, REVIEW_GOOGLE, E, btn, book_btn, cta_band, ic, img, lines,
+from csp import (art_bg, breath, rings, cut, phone_mock, ritual_title, BOOK, GIFT, APPLE, GOOGLE_PLAY, REVIEW_GOOGLE, E, btn, book_btn, cta_band, ic, img, lines,
                   page, review_card, sec_head)
 
 
-HERO_SLIDES = [  # image, focus, card label, card title, card link
-    ("aveda-jungle", "62% 50%", "The Aveda ritual", "Plant-powered colour &amp; care", "hair.html"),
-    ("hot-stones", "50% 50%", "Massage &amp; body", "15+ techniques, from $105", "massage.html"),
-    ("ritual-scalp", "50% 30%", "Scalp Solutions", "A facial for your scalp, $75", "hair.html#treatments"),
-    ("facial-hands", "50% 40%", "Éminence facials", "Organic skin care, from $75", "skin.html#facials"),
+HERO_SLIDES = [  # portrait image, focus, caption
+    ("ritual-scalp", "50% 28%", "The Aveda scalp ritual"),
+    ("botanical-leaf", "50% 35%", "Botanical Repair™"),
+    ("aveda-blossom", "50% 30%", "Pure flower essences"),
 ]
 
 
 def hero():
     slides = "".join(
-        f'<figure class="hero3-slide{" is-active" if i == 0 else ""}" data-label="{lab}" data-title="{title}" data-href="{href}" data-thumb="assets/img/{im}-800.webp">'
-        f'{img(im, "", "100vw", eager=i == 0, style="object-position:" + focus)}</figure>'
-        for i, (im, focus, lab, title, href) in enumerate(HERO_SLIDES))
-    im0, _, lab0, title0, href0 = HERO_SLIDES[0]
-    return f'''<section class="frame hero3 hero3--home" data-hero>
-  <div class="hero3-media">{slides}</div>
-  <div class="hero3-shade" aria-hidden="true"></div>
-  <div class="hero3-inner">
-    <div class="hero3-top">
+        f'<figure class="hx-slide{" is-active" if i == 0 else ""}" data-caption="{cap}">{img(im, "", "(min-width: 1000px) 34vw, 78vw", eager=i == 0, style="object-position:" + focus)}</figure>'
+        for i, (im, focus, cap) in enumerate(HERO_SLIDES))
+    avatars = "".join(f'<span class="av" style="--bd:{c}">{cut("team-" + t, "")}</span>' for t, c in
+                      [("carole", "var(--sage)"), ("christelle", "var(--sand-soft)"), ("jeff", "var(--sage-soft)"), ("melanie", "var(--blush)")])
+    return f'''<section class="frame hx hx--home grain" data-hx>
+  {art_bg()}
+  <div class="hx-inner">
+    <div class="hx-copy">
       <span class="eyebrow" data-reveal="fade"><span class="dot"></span> Aveda Concept salon &amp; eco-spa · Vaudreuil-Dorion</span>
-      <a class="hero3-card hero3-feature" href="{href0}" data-reveal style="--d:.6s" data-hero-card>
-        <span class="hero3-thumb"><img src="assets/img/{im0}-800.webp" alt="" width="160" height="110"></span>
-        <span class="hero3-ft"><span class="eyebrow" data-hero-label>{lab0}</span><strong data-hero-title>{title0}</strong></span>
-        <span class="hero3-go">{ic("arrow-up")}</span>
-      </a>
+      <h1 class="hx-title" data-split>{lines("Naturally", "<em>yours.</em>")}</h1>
+      <p class="hx-lead" data-reveal style="--d:.5s">Hair, skin, massage, medical aesthetics and bridal, under one roof and open 7 days. More than 100 treatments by 35+ specialists, with Aveda and Éminence organics.</p>
+      <div class="btn-row" data-reveal style="--d:.6s">{book_btn()}{btn("Find my treatment", "#finder", "ghost")}</div>
+      <div class="hx-proof" data-reveal style="--d:.7s"><span class="avs">{avatars}</span><span><strong>200+ Google reviews</strong><span class="status" data-open-status="short"></span></span></div>
     </div>
-    <div class="hero3-bottom">
-      <div class="hero3-copy">
-        <h1 class="hero3-title" data-split>{lines("Naturally", "<em>yours.</em>")}</h1>
-        <p class="hero3-lead" data-reveal style="--d:.3s">Hair, skin, massage, medical aesthetics and bridal, under one roof and open 7 days. More than 100 treatments by 35+ specialists, powered by Aveda and Éminence Organics.</p>
-      </div>
-      <div class="hero3-actions" data-reveal style="--d:.4s">
-        <div class="btn-row">{book_btn()}{btn("Find my treatment", "#finder", "glass")}</div>
-        <div class="hero3-count" aria-hidden="true"><span data-hero-n>01</span><i><b></b></i><span>0{len(HERO_SLIDES)}</span></div>
-      </div>
+    <div class="hx-art" data-hx-art>
+      {rings()}
+      <div class="hx-arch" data-depth="-10">{slides}<span class="hx-cap"><span data-hx-n>01</span> — <span data-hx-cap>{HERO_SLIDES[0][2]}</span></span></div>
+      <figure class="hx-orb" data-depth="18">{img("hot-stones", "", "200px")}</figure>
+      {breath()}
     </div>
+  </div>
+  <div class="hx-foot" data-stagger>
+    <div data-reveal><strong><span data-count="45">45</span>+</strong><span>years of Carole's craft</span></div>
+    <div data-reveal><strong><span data-count="35">35</span>+</strong><span>specialists, one standard</span></div>
+    <div data-reveal><strong><span data-count="100">100</span>+</strong><span>hair, skin &amp; body treatments</span></div>
+    <div data-reveal><strong>7 <em>days</em></strong><span>a week, evenings until 8 PM</span></div>
   </div>
 </section>'''
 

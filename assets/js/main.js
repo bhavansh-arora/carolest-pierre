@@ -127,11 +127,33 @@
   /* ---------- Text splitting ---------- */
   function splitLines() {
     $$("[data-split]").forEach(function (el) {
-      // Authors mark lines with .ln; wrap their content so each line can rise from a mask.
-      $$(".ln", el).forEach(function (ln, i) {
-        ln.style.setProperty("--i", i);
-        ln.innerHTML = "<span>" + ln.innerHTML + "</span>";
-      });
+      // Lines stay as authored (.ln); every word inside becomes its own span so headlines can rise word by word.
+      var w = 0;
+      var wrap = function (node) {
+        Array.prototype.slice.call(node.childNodes).forEach(function (n) {
+          if (n.nodeType === 3) {
+            var frag = document.createDocumentFragment();
+            n.textContent.split(/(\s+)/).forEach(function (part) {
+              if (!part) return;
+              if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); return; }
+              var sp = document.createElement("span");
+              sp.className = "wd"; sp.style.setProperty("--w", w++); sp.textContent = part;
+              frag.appendChild(sp);
+            });
+            n.parentNode.replaceChild(frag, n);
+          } else if (n.nodeType === 1) {
+            // Inline elements (an italic <em>) move as one word so their gradient and kerning stay intact.
+            // A fresh wrapper starts hidden; classing the existing element would fade it out first.
+            if (n.matches("em, strong, i, b")) {
+              var box = document.createElement("span");
+              box.className = "wd"; box.style.setProperty("--w", w++);
+              n.parentNode.replaceChild(box, n); box.appendChild(n);
+            }
+            else wrap(n);
+          }
+        });
+      };
+      $$(".ln", el).forEach(function (ln, i) { ln.style.setProperty("--i", i); wrap(ln); });
     });
     $$("[data-scrub-words]").forEach(function (el) {
       var walk = function (node) {
@@ -157,6 +179,9 @@
 
   /* ---------- Reveal on scroll ---------- */
   function reveals() {
+    $$(".bx-photo, .rit-card figure, .gallery figure, .card figure, .menu-group-media, .ritual figure, .collage figure, .member figure, .person figure, .rounded-img, .band, .pol").forEach(function (el) {
+      el.setAttribute("data-reveal", "curtain");
+    });
     var items = $$("[data-reveal], [data-split]");
     if (reduced || !("IntersectionObserver" in window)) { items.forEach(function (el) { el.classList.add("is-in"); }); return; }
     // Clip-revealed elements have no visible area until revealed, so watch their parent instead.
@@ -171,8 +196,10 @@
     var vh = window.innerHeight;
     items.forEach(function (el) {
       // Anything already on screen at load reveals straight away, even in the bottom margin.
-      if (el.getBoundingClientRect().top < vh) { el.classList.add("is-in"); return; }
-      var t = el.getAttribute("data-reveal") === "clip" ? el.parentElement : el;
+      // Already on screen: reveal on the next frames, after the start state has painted, so the motion is seen.
+      if (el.getBoundingClientRect().top < vh) { requestAnimationFrame(function () { requestAnimationFrame(function () { el.classList.add("is-in"); }); }); return; }
+      var mode = el.getAttribute("data-reveal");
+      var t = mode === "clip" || mode === "curtain" ? el.parentElement : el;
       if (!watched.has(t)) { watched.set(t, []); io.observe(t); }
       watched.get(t).push(el);
     });
@@ -732,31 +759,54 @@
   function yearStamp() { $$("[data-year]").forEach(function (el) { el.textContent = new Date().getFullYear(); }); }
 
 
-  /* ---------- Photo hero: slow crossfade slideshow ---------- */
-  function heroSlides() {
-    var root = $("[data-hero]");
-    if (!root) return;
-    var slides = $$(".hero3-slide", root);
-    var count = $(".hero3-count", root), num = $("[data-hero-n]", root);
-    var card = $("[data-hero-card]", root);
-    var i = 0, timer = null, DUR = 7000;
-    if (count) count.style.setProperty("--dur", DUR + "ms");
-    var show = function (n) {
-      i = (n + slides.length) % slides.length;
-      slides.forEach(function (sl, k) { sl.classList.toggle("is-active", k === i); });
-      var sl = slides[i];
-      if (num) num.textContent = String(i + 1).padStart(2, "0");
-      if (count) { count.classList.remove("is-run"); void count.offsetWidth; count.classList.add("is-run"); }
-      if (card) {
-        card.href = sl.getAttribute("data-href");
-        $("[data-hero-label]", card).innerHTML = sl.getAttribute("data-label");
-        $("[data-hero-title]", card).innerHTML = sl.getAttribute("data-title");
-        $(".hero3-thumb img", card).src = sl.getAttribute("data-thumb");
-      }
-    };
-    var play = function () { clearInterval(timer); if (!reduced && slides.length > 1) timer = setInterval(function () { show(i + 1); }, DUR); };
-    document.addEventListener("visibilitychange", function () { if (document.hidden) clearInterval(timer); else play(); });
-    show(0); play();
+  /* ---------- Arch hero: curtain slides, breathing guide, pointer depth ---------- */
+  function archHero() {
+    var root = $("[data-hx]");
+    if (root) {
+      var slides = $$(".hx-slide", root), num = $("[data-hx-n]", root), cap = $("[data-hx-cap]", root);
+      var i = 0, timer = null;
+      var show = function (n) {
+        var prev = slides[i];
+        i = (n + slides.length) % slides.length;
+        slides.forEach(function (sl) { sl.classList.remove("is-prev"); });
+        prev.classList.remove("is-active"); prev.classList.add("is-prev");
+        void slides[i].offsetWidth;
+        slides[i].classList.add("is-active");
+        if (num) num.textContent = String(i + 1).padStart(2, "0");
+        if (cap) cap.textContent = slides[i].getAttribute("data-caption");
+      };
+      var play = function () { clearInterval(timer); if (!reduced && slides.length > 1) timer = setInterval(function () { show(i + 1); }, 6500); };
+      document.addEventListener("visibilitychange", function () { if (document.hidden) clearInterval(timer); else play(); });
+      play();
+    }
+    // The guide's words follow the ring: it grows for four seconds (in), then shrinks for four (out).
+    $$(".hx-breath").forEach(function (b) {
+      var ring = $(".hx-breath-ring i", b), label = $("[data-breath]", b), inhale = true;
+      if (!ring || reduced) return;
+      ring.addEventListener("animationiteration", function () {
+        inhale = !inhale;
+        label.classList.add("is-fading");
+        setTimeout(function () { label.textContent = inhale ? "Breathe in" : "Breathe out"; label.classList.remove("is-fading"); }, 350);
+      });
+    });
+    if (reduced || !finePointer) return;
+    $$("[data-hx-art]").forEach(function (art) {
+      var hero = art.closest(".hx");
+      var layers = $$("[data-depth]", art).map(function (el) { return [el, parseFloat(el.getAttribute("data-depth"))]; });
+      var rings = $(".hx-rings", art);
+      var tx = 0, ty = 0, cx = 0, cy = 0, raf = null;
+      var tick = function () {
+        cx += (tx - cx) * 0.07; cy += (ty - cy) * 0.07;
+        layers.forEach(function (l) { l[0].style.transform = "translate3d(" + (cx * l[1]).toFixed(2) + "px," + (cy * l[1]).toFixed(2) + "px,0)"; });
+        if (rings) rings.style.transform = "translate(-50%,-50%) rotate(" + (cx * 6).toFixed(2) + "deg)";
+        raf = Math.abs(tx - cx) + Math.abs(ty - cy) > 0.0005 ? requestAnimationFrame(tick) : null;
+      };
+      hero.addEventListener("mousemove", function (e) {
+        var r = hero.getBoundingClientRect();
+        tx = (e.clientX - r.left) / r.width - 0.5; ty = (e.clientY - r.top) / r.height - 0.5;
+        if (!raf) raf = requestAnimationFrame(tick);
+      });
+    });
   }
 
   /* ---------- Expanding image: clip-path opens as you scroll through ---------- */
@@ -839,7 +889,7 @@
 
   /* ---------- Boot ---------- */
   splitLines();
-  heroSlides();
+  archHero();
   expandImage();
   cursor();
   transitions();
@@ -861,7 +911,7 @@
   gsapMotion();
   scrubWords();
   preloader().then(function () {
-    $$("[data-stage]").forEach(function (el) { el.classList.add("is-ready"); });
+    $$(".hx").forEach(function (el) { el.classList.add("is-ready"); });
     reveals();
   });
 })();

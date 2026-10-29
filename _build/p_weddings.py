@@ -234,7 +234,7 @@ def inquiry():
 def build():
     hero = phero("Weddings", ["Your day,", "<em>radiant.</em>"],
                  "Bridal hair and makeup by Carole St-Pierre's team: trials at the salon, the whole wedding party, and a Beauty in Action crew that comes to you.",
-                 "bridal-bouquet", "A bride holding a soft pink bouquet",
+                 "bridal-curls", "A bride with long, glossy cascading curls",
                  [("Bride from", "$90"), ("Trials", "At the salon"), ("On location", "Within 15 km"), ("Party minimum", "4 people")],
                  [("approach", "Approach"), ("menu", "Bridal menu"), ("quote", "Quote builder"), ("gallery", "Gallery"), ("faq", "FAQ"), ("inquiry", "Inquire")],
                  tag="Now booking wedding season",
