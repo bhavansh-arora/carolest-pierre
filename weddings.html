@@ -55,25 +55,19 @@
 <div class="menu" id="menu" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Site menu">
   <div class="menu-top">
     <a class="brand" href="index.html"><img src="assets/img/logo-mark.png" width="38" height="38" alt=""><span class="brand-text"><span class="brand-name">Carole St-Pierre</span><span class="brand-sub">salon &amp; spa</span></span></a>
-    <button class="menu-close" type="button">Close <span class="x"><svg class="" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 4 8 8M12 4l-8 8"/></svg></span></button>
+    <button class="menu-close" type="button" aria-label="Close menu"><svg class="" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 4 8 8M12 4l-8 8"/></svg></button>
   </div>
   <div class="menu-body">
     <nav class="menu-list" aria-label="Menu">
-      <a href="index.html"><span class="n">01</span>Home</a>
-      <a href="hair.html"><span class="n">02</span>Services</a>
-      <div class="menu-sub"><a href="hair.html">Hair &amp; Makeup</a><a href="skin.html">Skin &amp; Esthetics</a><a href="massage.html">Massage &amp; Body</a><a href="medispa.html">Medispa &amp; Laser</a></div>
-      <a href="weddings.html"><span class="n">03</span><span>Weddings <em>&amp; bridal</em></span></a>
-      <a href="rituals.html"><span class="n">04</span>Spa rituals</a>
-      <a href="team.html"><span class="n">05</span>The team</a>
-      <a href="about.html"><span class="n">06</span>About Carole</a>
-      <a href="visit.html"><span class="n">07</span>Visit &amp; FAQ</a>
+      <div class="menu-item menu-acc">
+        <button type="button" class="menu-link" aria-expanded="false" aria-controls="menu-services"><span>Services</span><span class="menu-plus" aria-hidden="true"></span></button>
+        <div class="menu-acc-panel" id="menu-services"><ul role="list"><li><a href="hair.html"><span>Hair &amp; Makeup</span><small>Aveda cuts, colour, treatments</small></a></li><li><a href="skin.html"><span>Skin &amp; Esthetics</span><small>Facials, nails, lashes, waxing</small></a></li><li><a href="massage.html"><span>Massage &amp; Body</span><small>15+ techniques, wraps, balneo</small></a></li><li><a href="medispa.html"><span>Medispa &amp; Laser</span><small>Laser, mesotherapy, peels</small></a></li></ul></div>
+      </div>
+      <div class="menu-item"><a class="menu-link" href="weddings.html" aria-current=page><span>Weddings</span><svg class="" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a></div><div class="menu-item"><a class="menu-link" href="rituals.html"><span>Spa rituals</span><svg class="" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a></div><div class="menu-item"><a class="menu-link" href="team.html"><span>The team</span><svg class="" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a></div><div class="menu-item"><a class="menu-link" href="about.html"><span>About Carole</span><svg class="" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a></div><div class="menu-item"><a class="menu-link" href="visit.html"><span>Visit &amp; FAQ</span><svg class="" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a></div>
     </nav>
     <div class="menu-foot">
-      <span class="status" data-open-status></span>
-      <a href="tel:+14504557999">450 455-7999</a>
-      <a href="mailto:info@carolest-pierre.com">info@carolest-pierre.com</a>
-      <span>3210, boul. de la Gare, suite 170<br>Vaudreuil-Dorion, QC</span>
-      <div class="btn-row"><a class="btn btn--lime" href="https://carolestpierre.zenoti.com/webstoreNew/services" target="_blank" rel="noopener">Book now <span class="ic"><svg class="" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span></a><a class="btn btn--ghost" href="https://carolestpierre.zenoti.com/webstoreNew/giftcards/9e1aaf54-17e8-4258-9fae-9b75d45ae056" target="_blank" rel="noopener">Gift cards <span class="ic"><svg class="" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span></a></div>
+      <a class="btn btn--lime" href="https://carolestpierre.zenoti.com/webstoreNew/services" target="_blank" rel="noopener">Book an appointment <span class="ic"><svg class="" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span></a>
+      <div class="menu-meta"><a href="tel:+14504557999"><svg class="" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 2.5 3 3c-.5 4.5 4.5 10.5 10 10l.5-2.5-3-1.5-1.5 1.5C7 9.5 6.5 9 5.5 7l1.5-1.5z"/></svg> 450 455-7999</a><span class="status" data-open-status="short"></span></div>
     </div>
   </div>
 </div>

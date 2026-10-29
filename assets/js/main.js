@@ -124,6 +124,7 @@
     var toggle = $(".menu-toggle");
     if (!menu || !toggle) return;
     var closeBtn = $(".menu-close", menu);
+    var viaKeys = false;
     function setMenu(open) {
       menu.classList.toggle("is-open", open);
       menu.setAttribute("aria-hidden", open ? "false" : "true");
@@ -131,13 +132,23 @@
       doc.classList.toggle("menu-open", open);
       if (lenis) open ? lenis.stop() : lenis.start();
       document.body.style.overflow = open ? "hidden" : "";
-      if (open) setTimeout(function () { closeBtn.focus(); }, 50);
-      else toggle.focus();
+      // Move focus only for keyboard users, so a tap doesn't leave a focus ring on the button.
+      if (viaKeys) { if (open) setTimeout(function () { closeBtn.focus(); }, 50); else toggle.focus(); }
     }
-    toggle.addEventListener("click", function () { setMenu(true); });
-    closeBtn.addEventListener("click", function () { setMenu(false); });
+    toggle.addEventListener("click", function (e) { viaKeys = e.detail === 0; setMenu(true); });
+    closeBtn.addEventListener("click", function (e) { viaKeys = e.detail === 0; setMenu(false); });
+    $$(".menu-acc", menu).forEach(function (acc) {
+      var b = $("button", acc);
+      b.addEventListener("click", function () {
+        var on = !acc.classList.contains("is-open");
+        acc.classList.toggle("is-open", on);
+        b.setAttribute("aria-expanded", on ? "true" : "false");
+      });
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && menu.classList.contains("is-open")) { viaKeys = true; setMenu(false); }
+    });
     menu.addEventListener("keydown", function (e) {
-      if (e.key === "Escape") setMenu(false);
       if (e.key === "Tab") {
         var f = $$("a, button", menu);
         var first = f[0], last = f[f.length - 1];

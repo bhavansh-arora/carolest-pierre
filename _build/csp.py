@@ -172,25 +172,19 @@ def header(current, tone):
 <div class="menu" id="menu" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Site menu">
   <div class="menu-top">
     <a class="brand" href="index.html"><img src="assets/img/logo-mark.png" width="38" height="38" alt=""><span class="brand-text"><span class="brand-name">Carole St-Pierre</span><span class="brand-sub">salon &amp; spa</span></span></a>
-    <button class="menu-close" type="button">Close <span class="x">{ic("x")}</span></button>
+    <button class="menu-close" type="button" aria-label="Close menu">{ic("x")}</button>
   </div>
   <div class="menu-body">
     <nav class="menu-list" aria-label="Menu">
-      <a href="index.html"><span class="n">01</span>Home</a>
-      <a href="hair.html"><span class="n">02</span>Services</a>
-      <div class="menu-sub">{"".join(f'<a href="{h}">{E(t)}</a>' for h, t, _, _ in SERVICES[:4])}</div>
-      <a href="weddings.html"><span class="n">03</span><span>Weddings <em>&amp; bridal</em></span></a>
-      <a href="rituals.html"><span class="n">04</span>Spa rituals</a>
-      <a href="team.html"><span class="n">05</span>The team</a>
-      <a href="about.html"><span class="n">06</span>About Carole</a>
-      <a href="visit.html"><span class="n">07</span>Visit &amp; FAQ</a>
+      <div class="menu-item menu-acc">
+        <button type="button" class="menu-link" aria-expanded="false" aria-controls="menu-services"><span>Services</span><span class="menu-plus" aria-hidden="true"></span></button>
+        <div class="menu-acc-panel" id="menu-services"><ul role="list">{"".join(f'<li><a href="{h}"{" aria-current=page" if current == h else ""}><span>{E(t)}</span><small>{E(d)}</small></a></li>' for h, t, d, _ in SERVICES[:4])}</ul></div>
+      </div>
+      {"".join(f'<div class="menu-item"><a class="menu-link" href="{h}"{" aria-current=page" if current == h else ""}><span>{t}</span>{ic("arrow")}</a></div>' for h, t in [("weddings.html", "Weddings"), ("rituals.html", "Spa rituals"), ("team.html", "The team"), ("about.html", "About Carole"), ("visit.html", "Visit &amp; FAQ")])}
     </nav>
     <div class="menu-foot">
-      <span class="status" data-open-status></span>
-      <a href="{TEL}">{PHONE}</a>
-      <a href="mailto:{EMAIL}">{EMAIL}</a>
-      <span>{ADDRESS}<br>{CITY}</span>
-      <div class="btn-row">{book_btn("Book now")}{btn("Gift cards", GIFT, "ghost", ext=True)}</div>
+      {btn("Book an appointment", BOOK, "lime", ext=True)}
+      <div class="menu-meta"><a href="{TEL}">{ic("phone")} {PHONE}</a><span class="status" data-open-status="short"></span></div>
     </div>
   </div>
 </div>'''
