@@ -1,34 +1,43 @@
 from content import REVIEWS, RITUALS, TEAM
-from csp import (phone_mock, ritual_title, BOOK, GIFT, APPLE, GOOGLE_PLAY, REVIEW_GOOGLE, SPARK, E, btn, book_btn, cta_band, ic, img, lines,
+from csp import (badge, cut, phone_mock, ritual_title, BOOK, GIFT, APPLE, GOOGLE_PLAY, REVIEW_GOOGLE, SPARK, E, btn, book_btn, cta_band, ic, img, lines,
                   page, review_card, sec_head)
 
 
+HERO_CAST = [
+    ("model-folk", "Plant-powered colour", "Aveda colour, 100% grey coverage", "hair.html#colour", "lime"),
+    ("model-leaf", "Botanical Repair™", "Bond-building, naturally glossy hair", "hair.html#treatments", "aqua"),
+    ("bride-curls", "Bridal styling", "Trials, parties, on-location", "weddings.html", "champagne"),
+]
+
+
 def hero():
-    return f'''<section class="frame hero grain" data-parallax-root>
-  <div class="hero-glow" aria-hidden="true"></div>
-  <div class="hero-inner">
-    <div class="hero-copy">
-      <span class="eyebrow" data-reveal="fade"><span class="num">(01)</span> — Aveda Concept salon &amp; eco-spa · Vaudreuil-Dorion</span>
-      <h1 class="hero-title" data-split>{lines("Naturally", "<em>yours.</em>")}</h1>
-      <p class="hero-sub" data-reveal>Hair, skin, massage, medical aesthetics and bridal, <strong>under one roof and open 7 days</strong>. More than 100 treatments by 35+ specialists, powered by Aveda and Éminence Organics.</p>
-      <div class="btn-row" data-reveal>{book_btn()}{btn("Find my treatment", "#finder", "ghost")}</div>
-    </div>
-    <div class="hero-media" aria-hidden="false">
-      <div class="hero-ring" aria-hidden="true"></div>
-      <figure class="hero-img hero-img--a" data-reveal="clip">{img("ritual-scalp", "A guest with eyes closed during an Aveda scalp ritual", "(min-width: 1024px) 34vw, 80vw", eager=True)}</figure>
-      <figure class="hero-img hero-img--b" data-reveal="scale" style="--d:.25s">{img("botanical-leaf", "Glossy dark hair framed by a green leaf, Aveda Botanical Repair", "(min-width: 1024px) 16vw, 40vw", eager=True)}</figure>
-      <div class="hero-card" data-reveal style="--d:.4s">
-        <span class="mono"><span class="status" data-open-status="short"></span></span>
-        <strong>Book in under a minute</strong>
-        <a href="{BOOK}" target="_blank" rel="noopener">See today's availability →</a>
-      </div>
-    </div>
-    <div class="hero-foot" data-reveal="fade" data-stagger>
-      <div class="hero-stat"><strong><span data-count="45">45</span><sup>+</sup></strong><span>years of Carole's craft and care</span></div>
-      <div class="hero-stat"><strong><span data-count="35">35</span><sup>+</sup></strong><span>stylists, estheticians &amp; therapists</span></div>
-      <div class="hero-stat"><strong><span data-count="100">100</span><sup>+</sup></strong><span>hair, skin &amp; body treatments</span></div>
-      <div class="hero-stat"><strong><span data-count="7">7</span><sup>days</sup></strong><span>a week, evenings until 8 PM</span></div>
-    </div>
+    cast = "".join(
+        f'<figure class="cast{" is-active" if i == 0 else ""}" data-tone="{tone}">{cut(n, "Aveda model: " + label, eager=i == 0)}</figure>'
+        for i, (n, label, sub, href, tone) in enumerate(HERO_CAST))
+    nav = "".join(
+        f'<button type="button" class="{"is-active" if i == 0 else ""}" data-slide="{i}" aria-label="Show {E(label)}"><span class="n">0{i + 1}</span><span class="t"><strong>{label}</strong><small>{E(sub)}</small></span><i><b></b></i></button>'
+        for i, (n, label, sub, href, tone) in enumerate(HERO_CAST))
+    return f'''<section class="frame stage grain" data-stage>
+  <div class="stage-visual">
+    <div class="stage-glow" aria-hidden="true"></div>
+    <div class="stage-orb" aria-hidden="true"></div>
+    <h1 class="stage-title"><span class="stage-back" data-letters>Naturally</span><span class="visually-hidden"> </span><span class="stage-front"><em data-letters>yours.</em></span></h1>
+    <div class="stage-cast" data-depth="1">{cast}</div>
+    {badge("Aveda Concept ✦ Eco-spa ✦ Vaudreuil-Dorion ✦ ", "stage-badge")}
+  </div>
+  <div class="stage-copy">
+    <div class="stage-meta" data-reveal="fade"><span class="status" data-open-status="short"></span><a href="{BOOK}" target="_blank" rel="noopener">See today's availability {ic("arrow-up")}</a></div>
+    <p class="hero-sub" data-reveal style="--d:.15s">Hair, skin, massage, medical aesthetics and bridal, <strong>under one roof and open 7 days</strong>. More than 100 treatments by 35+ specialists.</p>
+    <div class="btn-row" data-reveal style="--d:.25s">{book_btn()}{btn("Find my treatment", "#finder", "ghost")}</div>
+  </div>
+  <nav class="stage-nav" aria-label="Featured treatments" data-reveal="fade" style="--d:.6s">{nav}</nav>
+</section>
+<section class="numbers" aria-label="Carole St-Pierre in numbers">
+  <div class="container numbers-row" data-stagger>
+    <div class="hero-stat" data-reveal><strong><span data-count="45">45</span><sup>+</sup></strong><span>years of Carole's craft and care</span></div>
+    <div class="hero-stat" data-reveal><strong><span data-count="35">35</span><sup>+</sup></strong><span>stylists, estheticians &amp; therapists</span></div>
+    <div class="hero-stat" data-reveal><strong><span data-count="100">100</span><sup>+</sup></strong><span>hair, skin &amp; body treatments</span></div>
+    <div class="hero-stat" data-reveal><strong><span data-count="7">7</span><sup>days</sup></strong><span>a week, evenings until 8 PM</span></div>
   </div>
 </section>'''
 
@@ -52,29 +61,44 @@ def statement():
 
 
 def services():
-    cards = [
-        ("hair.html", "aveda-folk", "01 · Hair & makeup", "Hair, <em>reimagined</em>", "Precision cuts, Aveda colour with 100% grey coverage, Botanical Repair and event makeup.", "From $30"),
-        ("skin.html", "facial-white", "02 · Skin & esthetics", "Skin that <em>glows</em>", "Éminence Organics facials, nails, lashes, waxing and spray tan.", "From $75"),
-        ("massage.html", "massage-hands", "03 · Massage & body", "Let it <em>all go</em>", "Fifteen techniques, from Lomi Lomi to hot stones, plus wraps and balneotherapy.", "From $105"),
-        ("medispa.html", "laser", "04 · Medispa & laser", "Results, <em>safely</em>", "Cynosure Elite+ laser, mesotherapy, photorejuvenation and clinical peels.", "From $45"),
-        ("weddings.html", "bridal-curls", "05 · Bridal", "Your <em>big day</em>", "Trials, the whole party, and a team that comes to you.", "From $90"),
-        ("rituals.html", "ritual-head-to-toe", "06 · Spa rituals", "Half-day <em>bliss</em>", "Curated packages for you, your mom or someone you love.", "From $109"),
+    rows = [
+        ("hair.html", "aveda-folk", "Hair &amp; makeup", "Hair, <em>reimagined</em>", "Cuts · Aveda colour · Botanical Repair · event makeup", "From $30"),
+        ("skin.html", "facial-white", "Skin &amp; esthetics", "Skin that <em>glows</em>", "Éminence facials · nails · lashes · waxing · spray tan", "From $75"),
+        ("massage.html", "massage-hands", "Massage &amp; body", "Let it <em>all go</em>", "15+ techniques · hot stones · wraps · balneotherapy", "From $105"),
+        ("medispa.html", "laser", "Medispa &amp; laser", "Results, <em>safely</em>", "Cynosure Elite+ laser · mesotherapy · peels", "From $45"),
+        ("weddings.html", "bridal-curls", "Bridal", "Your <em>big day</em>", "Trials · the whole party · Beauty in Action on location", "From $90"),
+        ("rituals.html", "ritual-head-to-toe", "Spa rituals", "Half-day <em>bliss</em>", "Ten curated packages for you, your mom, or him", "From $109"),
     ]
-    html = []
-    for i, (href, im, tag, title, desc, frm) in enumerate(cards):
-        html.append(f'''<a class="svc" href="{href}" data-reveal>
-  {img(im, "", "(min-width: 1100px) 40vw, (min-width: 720px) 50vw, 100vw")}
-  <div class="svc-top"><span class="mono">{tag}</span><span class="arrow">{ic("arrow")}</span></div>
-  <div class="svc-body"><span class="from">{frm}</span><h3>{title}</h3><p>{desc}</p></div>
-</a>''')
-    html.append(f'''<a class="svc svc--text" href="{GIFT}" target="_blank" rel="noopener" data-reveal>
-  <div class="svc-top" style="position:static"><span class="mono" style="background:var(--ink);color:var(--lime)">Gift cards</span><span class="arrow">{ic("arrow-up")}</span></div>
-  <div class="svc-body" style="padding:0"><h3 style="color:var(--ink)">Give a <em style="color:var(--ink)">moment.</em></h3><p>Any amount, any service, never expires. Delivered by email in seconds.</p></div>
-</a>''')
+    items = []
+    for i, (href, im, cat, title, desc, frm) in enumerate(rows, 1):
+        items.append(f'''<li><a class="idx-row" href="{href}" data-img="assets/img/{im}-800.webp" data-reveal>
+  <span class="idx-n">0{i}</span>
+  <span class="idx-thumb">{img(im, "", "120px")}</span>
+  <span class="idx-main"><span class="idx-cat">{cat}</span><span class="idx-title">{title}</span><span class="idx-desc">{desc}</span></span>
+  <span class="idx-from">{frm}</span>
+  <span class="idx-arrow">{ic("arrow")}</span>
+</a></li>''')
     return f'''<section class="section section--flush-top" id="services">
   <div class="container">
     {sec_head("03", "Services", "100+ treatments", "Everything you need, <em class='accent'>under one roof.</em>", "From a quick brow tidy to a four-hour ritual, every service is delivered by a specialist, never a generalist.")}
-    <div class="bento" data-stagger>{"".join(html)}</div>
+    <div class="idx" data-index>
+      <ul class="idx-list" role="list">{"".join(items)}</ul>
+      <div class="idx-float" aria-hidden="true"><img alt="" src="assets/img/aveda-folk-800.webp"></div>
+    </div>
+    <div class="idx-foot" data-reveal><span class="muted">Can't decide? Our <a class="link-arrow" href="#finder">treatment finder {ic("arrow")}</a> matches you in three taps.</span>{btn("Buy a gift card", GIFT, "lime", ext=True, small=True, icon="gift")}</div>
+  </div>
+</section>'''
+
+
+def expand():
+    return f'''<section class="xp" data-expand aria-label="Our philosophy">
+  <div class="xp-sticky">
+    <figure class="xp-media">{img("aveda-jungle", "An Aveda campaign image: a model among lush green leaves", "100vw")}</figure>
+    <div class="xp-copy">
+      <span class="eyebrow"><span class="num">✦</span> Our philosophy</span>
+      <p class="xp-quote">“Your beauty and wellness are our <em>number-one</em> priority.”</p>
+      <span class="mono">Carole St-Pierre · Founder</span>
+    </div>
   </div>
 </section>'''
 
@@ -194,14 +218,25 @@ def rituals():
 
 
 def promise():
-    return f'''<section class="section">
+    rows = [
+        ("flower", "An Aveda Concept salon", "Plant-powered colour and care, crafted from flower and plant essences. Gentle on the scalp, brilliant on the hair."),
+        ("tree", "A tree for every product", "Éminence Organics plants a tree for every product sold, so every facial leaves a little more green behind."),
+        ("rabbit", "Cruelty-free, always", "We choose brands that never test on animals. Beauty without compromise, and without cruelty."),
+        ("leaf", "An eco-responsible spa", "Organic ingredients, mindful protocols, and a team that treats your wellbeing and the earth's as one."),
+    ]
+    items = "".join(f'''<li class="pr-row" data-reveal><span class="pr-n">0{i}</span><div><h3>{t}</h3><p>{d}</p></div><span class="pr-ic">{ic(icn)}</span></li>'''
+                    for i, (icn, t, d) in enumerate(rows, 1))
+    return f'''<section class="section" id="promise">
   <div class="container">
-    {sec_head("07", "Our promise", "Aveda · Éminence · Cruelty-free", "Beauty that's kind <em class='accent'>to the planet, too.</em>")}
-    <div class="values" data-stagger>
-      <article class="value value--dark" data-reveal><span class="ico">{ic("flower")}</span><h3>An Aveda Concept salon</h3><p>Plant-powered hair colour and care, crafted from flower and plant essences. Gentle on the scalp, brilliant on the hair.</p></article>
-      <article class="value" data-reveal><span class="ico">{ic("tree")}</span><h3>A tree for every product</h3><p>Éminence Organics plants a tree for every product sold, so every facial leaves a little more green behind.</p></article>
-      <article class="value value--lime" data-reveal><span class="ico">{ic("rabbit")}</span><h3>Cruelty-free, always</h3><p>We choose brands that never test on animals. Beauty without compromise, and without cruelty.</p></article>
-      <article class="value" data-reveal><span class="ico">{ic("leaf")}</span><h3>An eco-responsible spa</h3><p>Organic ingredients, mindful protocols and a team that treats your wellbeing, and the earth's, as one.</p></article>
+    <div class="pr">
+      <figure class="pr-media" data-reveal="clip">{img("aveda-blossom", "Aveda model among white blossoms", "(min-width: 1000px) 40vw, 100vw")}
+        {badge("Aveda ✦ Éminence ✦ Cruelty-free ✦ ", "badge--light pr-badge")}
+        <figcaption><span class="mono">15+ massage techniques · 10 languages · 200+ Google reviews</span></figcaption>
+      </figure>
+      <div>
+        {sec_head("07", "Our promise", "Kind by design", "Beauty that's kind <em class='accent'>to the planet, too.</em>")}
+        <ol class="pr-list" role="list">{items}</ol>
+      </div>
     </div>
   </div>
 </section>'''
@@ -239,7 +274,7 @@ def team():
     pick = ["carole", "jeff", "christelle", "melanie", "anna-rose", "genevieve", "rebecca", "mila", "dorianne", "aarti"]
     by = {t[1]: t for t in TEAM}
     people = "".join(
-        f'<a class="person" href="team.html#{s}"><figure>{img("team/" + s, "Portrait of " + by[s][0], "280px")}</figure><div><strong>{E(by[s][0])}</strong><span>{E(by[s][2])}</span></div></a>'
+        f'<a class="person" href="team.html#{s}" data-cursor="Meet"><figure data-initial="{E(by[s][0][0])}">{cut("team-" + s, "Portrait of " + by[s][0])}</figure><div><strong>{E(by[s][0])}</strong><span>{E(by[s][2])}</span></div></a>'
         for s in pick)
     return f'''<section class="section">
   <div class="container">
@@ -270,7 +305,7 @@ def promo():
 
 
 def build():
-    body = "\n".join([hero(), marquee(), statement(), services(), bridal(), finder(), rituals(), promise(), stats(), reviews(), team(), promo(),
+    body = "\n".join([hero(), marquee(), statement(), services(), expand(), bridal(), finder(), rituals(), promise(), reviews(), team(), promo(),
                       cta_band()])
     return page("index.html", "Carole St-Pierre salon & spa | Aveda hair salon & spa in Vaudreuil-Dorion",
                 "Aveda Concept hair salon and eco-responsible spa in Vaudreuil-Dorion: hair, facials, massage, laser, medical aesthetics and bridal styling. Open 7 days. Book online.",

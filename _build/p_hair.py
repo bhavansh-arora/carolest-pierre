@@ -64,12 +64,12 @@ def groups():
 
 
 def build():
-    hero = phero("Hair &amp; Makeup", ["Hair, <em>naturally</em>", "brilliant."],
+    hero = phero("Hair &amp; Makeup", ["Hair,", "<em>reimagined.</em>"],
                  "Our Aveda Lifestyle specialists deliver the hair you want: contemporary, romantic, modern, an updo, a bob, braided and more, always respecting the look you came for.",
                  "aveda-folk", "Model with sleek, glossy hair in an Aveda campaign",
                  [("Women's cut", "From $60"), ("Colour", "From $75"), ("Products", "Aveda"), ("Grey coverage", "100%")],
                  [("cut", "Cut &amp; style"), ("styling", "Styling"), ("colour", "Colour"), ("perm", "Perms"), ("treatments", "Treatments"), ("makeup", "Makeup")],
-                 tag="Aveda Concept salon")
+                 tag="Aveda Concept salon", cutout="model-leaf")
     steps = ritual_steps("01", "Every visit", "The Aveda ritual", "Every visit <em class='accent'>begins with you.</em>", [
         ("A real consultation", "We start by listening: your routine, your hair's history and the look you're dreaming of."),
         ("Stress-relieving shampoo", "An Aveda shampoo ritual with aromas and a scalp massage that resets your whole day."),

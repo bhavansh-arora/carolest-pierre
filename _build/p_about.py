@@ -90,7 +90,7 @@ def build():
                  "aveda-blossom", "Aveda model surrounded by white blossoms",
                  [("Founded by", "Carole St-Pierre"), ("Experience", "45+ years"), ("Team", "35+ professionals"), ("Treatments", "100+")],
                  [("story", "Carole's note"), ("careers", "Careers")], tag="Naturellement vôtre",
-                 cta=f'<div class="btn-row">{btn("Book a visit", BOOK, "lime", ext=True)}{btn("Meet the team", "team.html", "ghost")}</div>')
+                 cta=f'<div class="btn-row">{btn("Book a visit", BOOK, "lime", ext=True)}{btn("Meet the team", "team.html", "ghost")}</div>', cutout="carole")
     body = "\n".join([hero, letter(), pioneer(), values(), space(), brands(), careers(), cta_band()])
     return page("about.html", "About Carole St-Pierre | Aveda Concept Salon & Eco-Spa in Vaudreuil-Dorion",
                 "Founded by Carole St-Pierre, with 45+ years in beauty and wellness: an Aveda Concept salon and eco-responsible spa in Vaudreuil-Dorion with a team of 35+ professionals.", body)

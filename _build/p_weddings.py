@@ -232,13 +232,13 @@ def inquiry():
 
 
 def build():
-    hero = phero("Weddings", ["Your wedding,", "<em>beautifully</em> yours."],
+    hero = phero("Weddings", ["Your day,", "<em>radiant.</em>"],
                  "Bridal hair and makeup by Carole St-Pierre's team: trials at the salon, the whole wedding party, and a Beauty in Action crew that comes to you.",
                  "bridal-look-5", "A bride with soft glam makeup and loose waves",
                  [("Bride from", "$90"), ("Trials", "At the salon"), ("On location", "Within 15 km"), ("Party minimum", "4 people")],
                  [("approach", "Approach"), ("menu", "Bridal menu"), ("quote", "Quote builder"), ("gallery", "Gallery"), ("faq", "FAQ"), ("inquiry", "Inquire")],
                  tag="Now booking wedding season",
-                 cta=f'<div class="btn-row">{btn("Build my quote", "#quote", "lime")}{btn("Ask about my date", "#inquiry", "ghost")}</div>')
+                 cta=f'<div class="btn-row">{btn("Build my quote", "#quote", "lime")}{btn("Ask about my date", "#inquiry", "ghost")}</div>', cutout="bride-curls")
     body = "\n".join([hero, approach(), process(), menu(), quote(), gallery(), testimonial(), bridal_faq(), inquiry()])
     return page("weddings.html", "Wedding Hair & Makeup in Vaudreuil-Dorion | Carole St-Pierre salon & spa",
                 "Bridal hair and makeup in Vaudreuil-Dorion: trials, the whole wedding party, and on-location Beauty in Action within 15 km. Build your quote online.", body)

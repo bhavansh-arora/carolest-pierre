@@ -12,7 +12,7 @@ python3 -m http.server 8000
 
 | Page | What's on it |
 | --- | --- |
-| `index.html` | Hero, services bento, bridal teaser, 3-tap **treatment finder**, pinned spa-ritual scroller, values, reviews, team, gift card + app promos |
+| `index.html` | **Layered stage hero** (giant type with rotating Aveda model cutouts and pointer depth), services index with cursor-follow imagery, scroll-expanding philosophy image, bridal teaser, 3-tap **treatment finder**, pinned spa-ritual scroller, promise, reviews, team, gift card + app promos |
 | `weddings.html` | Approach, process, bridal menu (salon / on location tabs), **live bridal quote builder** with suggested start time, gallery, FAQ, inquiry form |
 | `hair.html` | Aveda ritual, full hair menu with sticky section nav, treatments, stylist levels, stylists |
 | `skin.html` | Éminence facials, searchable wax/sugar/threading table, nails, lashes, spray tan prep & aftercare |
@@ -38,6 +38,7 @@ python3 _build/build.py
 - **Form destination, hours used by the live "open now" status:** `assets/js/config.js`
 - **Design tokens (colours, type, spacing):** top of `assets/css/main.css`
 - **Images:** `python3 _build/images.py <folder-of-originals>` regenerates the WebP files in `assets/img/`
+- **Cutouts:** `python3 _build/cutouts.py <folder-of-originals>` regenerates the transparent subject and team cutouts in `assets/img/cut/` (needs `pip install "rembg[cpu]"`; the outputs are committed, so this is only needed for new photos)
 
 ## Forms
 
@@ -45,7 +46,7 @@ While `formEndpoint` in `assets/js/config.js` is empty, forms open a pre-filled 
 
 ## Tech
 
-Plain HTML/CSS/JS, with no build step needed to host it. Fonts are self-hosted (Manrope, Fraunces, JetBrains Mono, all OFL). GSAP + ScrollTrigger and Lenis are vendored in `assets/vendor/` and only enhance motion: the site works without them and respects `prefers-reduced-motion`. Each page carries schema.org BeautySalon/DaySpa data; `sitemap.xml` and `robots.txt` are included.
+Plain HTML/CSS/JS, with no build step needed to host it. Fonts are self-hosted (Manrope, Fraunces, JetBrains Mono, all OFL). GSAP + ScrollTrigger and Lenis are vendored in `assets/vendor/` and only enhance motion: the site works without them. Signature interactions (stage hero, services index, expanding image, custom cursor, page transitions) are vanilla JS in `assets/js/main.js`, and all of them switch off under `prefers-reduced-motion` and on touch devices where they don't apply. Each page carries schema.org BeautySalon/DaySpa data; `sitemap.xml` and `robots.txt` are included.
 
 ## To confirm with the salon before launch
 

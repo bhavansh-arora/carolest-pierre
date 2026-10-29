@@ -90,7 +90,7 @@ def policies():
 def build():
     hero = phero("Visit", ["Come in,", "<em>breathe out.</em>"],
                  "Find us at 3210 boulevard de la Gare in Vaudreuil-Dorion, steps from the train station, with easy parking. Open 7 days, with evenings until 8 PM.",
-                 "salon-exterior", "The Carole St-Pierre salon storefront",
+                 "salon-reception", "The Carole St-Pierre reception desk",
                  [("Address", "3210 boul. de la Gare, suite 170"), ("Phone", PHONE), ("Today", '<span class="status" data-open-status="short"></span>'), ("Parking", "Easy, on site")],
                  [("contact", "Hours &amp; map"), ("message", "Write to us"), ("faq", "FAQ"), ("policies", "Policies")], tag="Vaudreuil-Dorion",
                  cta=f'<div class="btn-row">{btn("Get directions", MAPS, "lime", ext=True, icon="pin")}{btn("Call " + PHONE, TEL, "ghost", icon="phone")}</div>')

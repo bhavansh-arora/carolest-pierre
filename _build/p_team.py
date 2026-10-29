@@ -1,5 +1,5 @@
 from content import TEAM, TEAM_CATS
-from csp import (BOOK, EMAIL, E, btn, cta_band, ic, img, lines, page, sec_head)
+from csp import (BOOK, EMAIL, E, btn, cta_band, cut, ic, img, page, phero, sec_head)
 
 CAT_LABEL = dict(TEAM_CATS)
 
@@ -10,7 +10,7 @@ def leadership():
     for slug in ("carole", "julie"):
         name, _, role, _, bio, love, langs = by[slug]
         blocks.append(f'''<article class="split split--center" id="{slug}" style="gap:clamp(24px,4vw,64px)" data-reveal>
-  <div class="rounded-img ratio-45" style="max-width:520px">{img("team/" + slug, "Portrait of " + name, "(min-width: 900px) 40vw, 100vw")}</div>
+  <figure class="lead-portrait" data-initial="{name[0]}">{cut("team-" + slug, "Portrait of " + name)}</figure>
   <div class="stack" style="--stack:20px">
     <span class="eyebrow"><span class="num">{E(role)}</span></span>
     <h3 class="h2">{name}<em class="accent">.</em></h3>
@@ -34,7 +34,7 @@ def grid():
             continue
         first = cats.split()[0]
         cards.append(f'''<article class="member" id="{slug}" data-cat="{cats}" data-reveal>
-  <figure>{img("team/" + slug, "Portrait of " + name, "(min-width: 1100px) 22vw, (min-width: 760px) 30vw, 50vw")}<span class="chip">{CAT_LABEL.get(first, "")}</span></figure>
+  <figure data-initial="{E(name[0])}">{cut("team-" + slug, "Portrait of " + name)}<span class="chip">{CAT_LABEL.get(first, "")}</span></figure>
   <div><h3>{E(name)}</h3><p class="role">{E(role)}</p></div>
   <details><summary>About {E(name)} <span class="pm">+</span></summary>
     <p>{E(bio)}</p><p><strong>Guests love:</strong> {E(love)}</p>
@@ -69,20 +69,13 @@ def join():
 
 
 def build():
-    hero = f'''<section class="frame phero grain">
-  <div class="phero-inner">
-    <div class="crumbs" data-reveal="fade"><a href="index.html">Home</a><span>/</span><span>Team</span></div>
-    <h1 class="phero-title" data-split>{lines("35+ specialists,", "<em>one standard.</em>")}</h1>
-    <div class="phero-grid">
-      <div class="phero-media" data-reveal="clip">{img("salon-reception", "The Carole St-Pierre reception", "(min-width: 900px) 55vw, 100vw", eager=True, parallax=8)}<span class="chip chip--lime tag mono">10 languages spoken</span></div>
-      <div class="phero-meta" data-reveal>
-        <p class="lead">Stylists, estheticians, massage therapists, laser technicians and a front-desk team that remembers your name. Many guests have followed their specialist for ten years or more.</p>
-        <div class="btn-row">{btn("Book by name", BOOK, "lime", ext=True)}{btn("Filter the team", "#specialists", "ghost")}</div>
-        <dl class="phero-facts"><div><dt>Leadership</dt><dd>45+ years</dd></div><div><dt>Professionals</dt><dd>35+</dd></div><div><dt>Disciplines</dt><dd>Hair · skin · body</dd></div><div><dt>Languages</dt><dd>FR · EN · +8</dd></div></dl>
-      </div>
-    </div>
-  </div>
-</section>'''
+    hero = phero("Team", ["Meet the", "<em>specialists.</em>"],
+                 "Stylists, estheticians, massage therapists, laser technicians and a front-desk team that remembers your name. Many guests have followed their specialist for ten years or more.",
+                 None, "Carole St-Pierre with members of her team",
+                 [("Leadership", "45+ years"), ("Professionals", "35+"), ("Disciplines", "Hair · skin · body"), ("Languages", "FR · EN · +8")],
+                 [("leadership", "Leadership"), ("specialists", "All specialists")], tag="10 languages spoken",
+                 cta=f'<div class="btn-row">{btn("Book by name", BOOK, "lime", ext=True)}{btn("Filter the team", "#specialists", "ghost")}</div>',
+                 cast=["team-christelle", "team-carole", "team-jeff"])
     body = "\n".join([hero, leadership(), grid(), join(), cta_band("Book with <em>your favourite.</em>")])
     return page("team.html", "Our Team | Stylists, Estheticians & Massage Therapists | Carole St-Pierre salon & spa",
                 "Meet the 35+ specialists of Carole St-Pierre salon & spa in Vaudreuil-Dorion: Aveda stylists and colourists, estheticians, laser technicians and massage therapists.", body)

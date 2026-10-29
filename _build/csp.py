@@ -313,32 +313,56 @@ def page(slug, title, description, body, tone="dark", loader=False, extra_schema
     return slug
 
 
-def phero(crumb, title_lines, lead, image, alt, facts, jumps=None, tag="", cta=None):
+PAGE_NO = {"Weddings": "02", "Hair &amp; Makeup": "03", "Skin &amp; Esthetics": "04", "Massage &amp; Body": "05", "Medispa &amp; Laser": "06",
+           "Spa rituals": "07", "Team": "08", "About": "09", "Visit": "10"}
+
+
+def phero(crumb, title_lines, lead, image, alt, facts, jumps=None, tag="", cta=None, cutout=None, cast=None):
+    """Inner-page hero. With `cutout` (or `cast`, a list of cutouts) it's a layered stage; otherwise a full-bleed cinema shot."""
     facts_html = "".join(f"<div><dt>{k}</dt><dd>{v}</dd></div>" for k, v in facts)
     jump_html = ""
     if jumps:
         jump_html = '<nav class="jump" aria-label="On this page">' + "".join(f'<a href="#{a}">{t}</a>' for a, t in jumps) + "</nav>"
-    tag_html = f'<span class="chip chip--lime tag mono">{tag}</span>' if tag else ""
     cta_html = cta if cta is not None else f'<div class="btn-row">{book_btn()}{btn("Call " + PHONE, TEL, "ghost", icon="phone")}</div>'
-    return f'''<section class="frame phero grain" data-parallax-root>
-  <div class="phero-inner">
-    <div class="crumbs" data-reveal="fade"><a href="index.html">Home</a><span>/</span><span>{crumb}</span></div>
-    <h1 class="phero-title" data-split>{lines(*title_lines)}</h1>
-    <div class="phero-grid">
-      <div class="phero-media" data-reveal="clip">{img(image, alt, "(min-width: 900px) 55vw, 100vw", eager=True, parallax=8)}{tag_html}</div>
-      <div class="phero-meta" data-reveal>
-        <p class="lead">{lead}</p>
-        {cta_html}
-        <dl class="phero-facts">{facts_html}</dl>
-      </div>
+    no = PAGE_NO.get(crumb, "")
+    top = f'''<div class="ph-top" data-reveal="fade"><div class="crumbs"><a href="index.html">Home</a><span>/</span><span>{crumb}</span></div><span class="mono ph-no">({no} / 10)</span></div>'''
+    meta = f'''<div class="ph-meta" data-reveal style="--d:.2s">
+      {f'<span class="chip chip--lime mono ph-tag">{tag}</span>' if tag else ""}
+      <p class="lead">{lead}</p>
+      {cta_html}
     </div>
+    <dl class="ph-facts" data-reveal style="--d:.35s">{facts_html}</dl>'''
+    if cutout or cast:
+        people = cast or [cutout]
+        figs = "".join(f'<figure class="ph-person" style="--k:{i}">{cut(c, alt if i == 0 else "", eager=True)}</figure>' for i, c in enumerate(people))
+        return f'''<section class="frame ph ph--stage grain{" ph--cast" if cast else ""}" data-stage-lite>
+  <div class="stage-glow" aria-hidden="true"></div>
+  <div class="stage-orb" aria-hidden="true"></div>
+  <div class="ph-inner">
+    {top}
+    <h1 class="ph-title" data-split>{lines(*title_lines)}</h1>
+    <div class="ph-people" data-depth>{figs}</div>
+    {badge("Carole St-Pierre ✦ salon &amp; spa ✦ naturally ✦ ", "ph-badge")}
+    {meta}
+    {jump_html}
+  </div>
+</section>'''
+    return f'''<section class="frame ph ph--cinema grain" data-parallax-root>
+  <div class="ph-bg">{img(image, alt, "100vw", eager=True, parallax=10)}</div>
+  <div class="ph-inner">
+    {top}
+    <h1 class="ph-title" data-split>{lines(*title_lines)}</h1>
+    {badge("Carole St-Pierre ✦ salon &amp; spa ✦ naturally ✦ ", "ph-badge")}
+    {meta}
     {jump_html}
   </div>
 </section>'''
 
 
-def cta_band(title_html="Your moment <em>is waiting.</em>", sub="Book online in under a minute, or call and we will find the perfect time and specialist for you."):
-    return f'''<section class="frame is-dark grain">
+def cta_band(title_html="Your moment <em>is waiting.</em>", sub="Book online in under a minute, or call and we will find the perfect time and specialist for you.", model="model-platinum"):
+    return f'''<section class="frame is-dark grain cta-frame">
+  <div class="stage-glow" aria-hidden="true"></div>
+  <figure class="cta-model" aria-hidden="true">{cut(model)}</figure>
   <div class="container section cta">
     <span class="eyebrow" data-reveal="fade"><span class="num">✦</span> Open 7 days · Vaudreuil-Dorion</span>
     <h2 class="display" data-split>{title_html}</h2>
@@ -411,7 +435,7 @@ def team_strip(slugs, num, title, lead=""):
     from content import TEAM
     by = {t[1]: t for t in TEAM}
     people = "".join(
-        f'<a class="person" href="team.html#{s}"><figure>{img("team/" + s, "Portrait of " + by[s][0], "280px")}</figure><div><strong>{E(by[s][0])}</strong><span>{E(by[s][2])}</span></div></a>'
+        f'<a class="person" href="team.html#{s}" data-cursor="Meet"><figure data-initial="{E(by[s][0][0])}">{cut("team-" + s, "Portrait of " + by[s][0])}</figure><div><strong>{E(by[s][0])}</strong><span>{E(by[s][2])}</span></div></a>'
         for s in slugs)
     return f'''<section class="section is-paper2">
   <div class="container">{sec_head(num, "Your specialists", "Book by name", title, lead)}</div>
@@ -434,3 +458,32 @@ def ritual_steps(num, left, right, title, steps, lead=""):
     <div class="steps {cls}" data-stagger>{cards}</div>
   </div>
 </section>'''
+
+
+def _cut_size(name):
+    from PIL import Image
+    with Image.open(os.path.join(ROOT, "assets", "img", "cut", name + ".webp")) as im:
+        return im.size
+
+
+def cut(name, alt="", cls="", eager=False, style=""):
+    """A transparent cutout image from assets/img/cut/."""
+    w, h = _cut_size(name)
+    load = ' fetchpriority="high"' if eager else ' loading="lazy" decoding="async"'
+    c = f' class="{cls}"' if cls else ""
+    st = f' style="{style}"' if style else ""
+    return f'<img src="assets/img/cut/{name}.webp" width="{w}" height="{h}" alt="{E(alt)}"{load}{c}{st}>'
+
+
+_BADGES = [0]
+
+
+def badge(text, cls=""):
+    """Rotating circular text badge with the logo mark in the middle."""
+    _BADGES[0] += 1
+    pid = f"bp{_BADGES[0]}"
+    return f'''<div class="badge {cls}" aria-hidden="true">
+  <svg viewBox="0 0 200 200"><defs><path id="{pid}" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/></defs>
+  <text textLength="488" lengthAdjust="spacing"><textPath href="#{pid}" startOffset="0" textLength="488" lengthAdjust="spacing">{E(text)}</textPath></text></svg>
+  <img src="assets/img/logo-mark.png" alt="" width="56" height="56">
+</div>'''
