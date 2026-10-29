@@ -654,6 +654,20 @@
       { id: "x_travel", group: "extras", kind: "toggle", label: "Venue beyond 15 km", note: "Flat team travel fee", price: [100, 100] }
     ]
   };
+  var QB_SUMMARY = /^Bridal quote estimate[\s\S]*?before taxes\n*/;
+  function inquiryNote() {
+    var note = $("#inquiry [data-qb-added]");
+    if (!note) return;
+    var msg = $("#inquiry textarea[name=message]");
+    $("[data-qb-clear]", note).addEventListener("click", function () {
+      msg.value = msg.value.replace(QB_SUMMARY, "");
+      msg.dispatchEvent(new Event("input"));
+      note.hidden = true;
+      msg.focus();
+    });
+    msg.addEventListener("input", function () { if (!QB_SUMMARY.test(msg.value)) note.hidden = true; });
+    if (msg.form) msg.form.addEventListener("reset", function () { note.hidden = true; });
+  }
   function quoteBuilder() {
     var root = $("[data-quote]");
     if (!root) return;
@@ -730,6 +744,7 @@
       var earlyNote = $("[data-qb-early-note]", root);
       if (earlyNote) earlyNote.hidden = !(startMin !== null && startMin < 8 * 60 && people);
       root.setAttribute("data-summary", summaryText(lo, hi, people, startMin));
+      root.setAttribute("data-people", people);
     }
 
     function summaryText(lo, hi, people, startMin) {
@@ -764,7 +779,18 @@
     $$("[data-qb-send]", root).forEach(function (b) {
       b.addEventListener("click", function () {
         var msg = document.querySelector("#inquiry textarea[name=message]");
-        if (msg) { msg.value = root.getAttribute("data-summary") + "\n\n"; msg.dispatchEvent(new Event("input")); }
+        if (msg) {
+          // Replace an earlier estimate rather than stacking them, and keep whatever the guest wrote.
+          msg.value = root.getAttribute("data-summary") + "\n\n" + msg.value.replace(QB_SUMMARY, "");
+          msg.dispatchEvent(new Event("input"));
+          var note = document.querySelector("#inquiry [data-qb-added]");
+          if (note) note.hidden = false;
+        }
+        // Carry the quote's party size and place into the form, so the two always agree.
+        var size = document.querySelector("#inquiry input[name=party_size]"), where = document.querySelector("#inquiry select[name=location]");
+        var people = +root.getAttribute("data-people");
+        if (size && people) size.value = people;
+        if (where) where.value = mode === "salon" ? "The salon" : (state.location.x_travel ? "Venue beyond 15 km" : "Home or hotel (within 15 km)");
         var target = document.getElementById("inquiry");
         if (target) {
           target.scrollIntoView({ behavior: reduced ? "auto" : "smooth" });
@@ -1118,6 +1144,7 @@
   finder();
   quoteBuilder();
   fields();
+  inquiryNote();
   forms();
   scrollers();
   counters();

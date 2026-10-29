@@ -19,14 +19,14 @@
 <link rel="preload" href="assets/fonts/cormorant-garamond-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/cormorant-garamond-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/fonts.css?v=28b0ab2d">
-<link rel="stylesheet" href="assets/css/main.css?v=43fe55c0">
+<link rel="stylesheet" href="assets/css/main.css?v=dfe1f55d">
 <script>document.documentElement.classList.replace("no-js","js");if("scrollRestoration"in history)history.scrollRestoration="manual";try{if(sessionStorage.getItem("csp-pt")==="1"&&!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("pt-enter")}catch(e){}</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": ["BeautySalon", "DaySpa", "HairSalon"], "name": "Carole St-Pierre salon & spa", "url": "https://www.carolest-pierre.com", "telephone": "+1-450-455-7999", "email": "info@carolest-pierre.com", "image": "https://www.carolest-pierre.com/assets/img/ritual-scalp.webp", "logo": "https://www.carolest-pierre.com/assets/img/logo-mark.png", "priceRange": "$$", "address": {"@type": "PostalAddress", "streetAddress": "3210 boul. de la Gare, suite 170", "addressLocality": "Vaudreuil-Dorion", "addressRegion": "QC", "postalCode": "J7V 8W5", "addressCountry": "CA"}, "openingHoursSpecification": [{"@type": "OpeningHoursSpecification", "dayOfWeek": "Monday", "opens": "10:00", "closes": "17:00"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": "Tuesday", "opens": "09:00", "closes": "19:00"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": "Wednesday", "opens": "09:00", "closes": "20:00"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": "Thursday", "opens": "09:00", "closes": "20:00"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": "Friday", "opens": "09:00", "closes": "20:00"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "09:00", "closes": "17:00"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": "Sunday", "opens": "10:00", "closes": "16:00"}], "sameAs": ["https://www.instagram.com/carolestpierre.salonspa/", "https://www.facebook.com/profile.php?id=61553709430803"], "founder": {"@type": "Person", "name": "Carole St-Pierre"}}</script>
 <script type="speculationrules">{"prefetch":[{"where":{"and":[{"selector_matches":"a[href$='.html'], a[href*='.html#']"},{"not":{"selector_matches":"[target=_blank]"}}]},"eagerness":"moderate"}]}</script>
 <script src="assets/vendor/gsap.min.js" defer></script>
 <script src="assets/vendor/ScrollTrigger.min.js" defer></script>
 <script src="assets/js/config.js?v=45bf815a" defer></script>
-<script src="assets/js/main.js?v=9726c419" defer></script>
+<script src="assets/js/main.js?v=cb406834" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -224,7 +224,7 @@
         <ul class="qb-lines" data-qb-lines></ul>
         <div class="qb-schedule"><span class="mono">Suggested start time</span><strong data-qb-start>—</strong><span>Based on a team of 2 to 3 artists. We confirm your exact schedule after your inquiry.</span>
           <span class="qb-alert" data-qb-early-note hidden><svg class="" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6"/><path d="M8 4.5V8l2.5 1.5"/></svg> Starts before 8 AM include the early-start supplement.</span></div>
-        <button class="btn btn--lime" type="button" data-qb-send style="justify-self:start">Send this quote to Carole <span class="ic"><svg class="" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span></button>
+        <button class="btn btn--lime" type="button" data-qb-send style="justify-self:start">Add this quote to my inquiry <span class="ic"><svg class="" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span></button>
         <p class="qb-fine">Estimate before taxes, based on the published wedding menu. Final pricing depends on hair length and thickness and is confirmed by our team.</p>
       </aside>
     </div>
@@ -280,9 +280,9 @@
           <div class="field"><label for="bi-email">Email</label><input id="bi-email" name="email" type="email" required autocomplete="email" inputmode="email" placeholder="you@example.com"></div>
           <div class="field"><label for="bi-phone">Phone</label><input id="bi-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="450 555-0123"></div>
           <div class="field"><label for="bi-date">Wedding date</label><div class="date-wrap"><input id="bi-date" name="wedding_date" type="date"><span class="date-ph" aria-hidden="true">Choose your date</span></div></div>
-          <div class="field"><label for="bi-where">Getting ready at</label><select id="bi-where" name="location"><option>The salon</option><option>Home or hotel (within 15 km)</option><option>Venue beyond 15 km</option><option>Not sure yet</option></select></div>
-          <div class="field"><label for="bi-size">People needing services</label><input id="bi-size" name="party_size" type="number" inputmode="numeric" min="1" max="30" value="4" placeholder="4"></div>
-          <div class="field full"><label for="bi-msg">Tell us about your day</label><textarea id="bi-msg" name="message" placeholder="Your vision, inspiration, timing..."></textarea></div>
+          <div class="field"><label for="bi-where">Getting ready at</label><select id="bi-where" name="location"><option value="" disabled selected>Choose one</option><option>The salon</option><option>Home or hotel (within 15 km)</option><option>Venue beyond 15 km</option><option>Not sure yet</option></select></div>
+          <div class="field"><label for="bi-size">People needing services</label><input id="bi-size" name="party_size" type="number" inputmode="numeric" min="1" max="30" placeholder="How many people?"></div>
+          <div class="field full"><label for="bi-msg">Tell us about your day</label><p class="qb-added" data-qb-added hidden><svg class="" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3 3 7-7"/></svg> Your quote estimate is in the message below. Add anything else, or <button type="button" data-qb-clear>remove it</button>.</p><textarea id="bi-msg" name="message" placeholder="Your vision, inspiration, timing..."></textarea></div>
         </div>
         <div class="btn-row" style="justify-content:space-between">
           <button class="btn btn--lime" type="submit">Send my inquiry <span class="ic"><svg class="" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span></button>

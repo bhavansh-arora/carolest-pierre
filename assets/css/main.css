@@ -1665,3 +1665,10 @@ body::before, .grain::after { display: none; }
 .date-wrap.has-value .date-ph, .date-wrap:focus-within .date-ph { display: none; }
 .date-wrap:not(.has-value):not(:focus-within) input[type="date"]::-webkit-datetime-edit { color: transparent; }
 .news-form .bday:invalid:not(:placeholder-shown):not(:focus), .field input:invalid:not(:placeholder-shown):not(:focus) { border-color: #d98b74; }
+
+/* Wedding inquiry: note shown when the quote estimate is added to the message */
+.qb-added { margin: 2px 0 4px; font-size: 0.9rem; line-height: 1.5; color: var(--lime); }
+.qb-added[hidden] { display: none; }
+.qb-added svg { display: inline-block; width: 15px; height: 15px; margin-right: 6px; vertical-align: -2px; }
+.qb-added button { color: inherit; text-decoration: underline; text-underline-offset: 3px; font: inherit; }
+.field select:has(option[value=""]:checked) { color: var(--on-dark-3); }

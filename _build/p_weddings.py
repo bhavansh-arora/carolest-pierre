@@ -141,7 +141,7 @@ def quote():
         <ul class="qb-lines" data-qb-lines></ul>
         <div class="qb-schedule"><span class="mono">Suggested start time</span><strong data-qb-start>—</strong><span>Based on a team of 2 to 3 artists. We confirm your exact schedule after your inquiry.</span>
           <span class="qb-alert" data-qb-early-note hidden>{ic("clock")} Starts before 8 AM include the early-start supplement.</span></div>
-        <button class="btn btn--lime" type="button" data-qb-send style="justify-self:start">Send this quote to Carole <span class="ic">{ic("arrow")}</span></button>
+        <button class="btn btn--lime" type="button" data-qb-send style="justify-self:start">Add this quote to my inquiry <span class="ic">{ic("arrow")}</span></button>
         <p class="qb-fine">Estimate before taxes, based on the published wedding menu. Final pricing depends on hair length and thickness and is confirmed by our team.</p>
       </aside>
     </div>
@@ -216,9 +216,9 @@ def inquiry():
           <div class="field"><label for="bi-email">Email</label><input id="bi-email" name="email" type="email" required autocomplete="email" inputmode="email" placeholder="you@example.com"></div>
           <div class="field"><label for="bi-phone">Phone</label><input id="bi-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="450 555-0123"></div>
           <div class="field"><label for="bi-date">Wedding date</label><div class="date-wrap"><input id="bi-date" name="wedding_date" type="date"><span class="date-ph" aria-hidden="true">Choose your date</span></div></div>
-          <div class="field"><label for="bi-where">Getting ready at</label><select id="bi-where" name="location"><option>The salon</option><option>Home or hotel (within 15 km)</option><option>Venue beyond 15 km</option><option>Not sure yet</option></select></div>
-          <div class="field"><label for="bi-size">People needing services</label><input id="bi-size" name="party_size" type="number" inputmode="numeric" min="1" max="30" value="4" placeholder="4"></div>
-          <div class="field full"><label for="bi-msg">Tell us about your day</label><textarea id="bi-msg" name="message" placeholder="Your vision, inspiration, timing..."></textarea></div>
+          <div class="field"><label for="bi-where">Getting ready at</label><select id="bi-where" name="location"><option value="" disabled selected>Choose one</option><option>The salon</option><option>Home or hotel (within 15 km)</option><option>Venue beyond 15 km</option><option>Not sure yet</option></select></div>
+          <div class="field"><label for="bi-size">People needing services</label><input id="bi-size" name="party_size" type="number" inputmode="numeric" min="1" max="30" placeholder="How many people?"></div>
+          <div class="field full"><label for="bi-msg">Tell us about your day</label><p class="qb-added" data-qb-added hidden>{ic("check")} Your quote estimate is in the message below. Add anything else, or <button type="button" data-qb-clear>remove it</button>.</p><textarea id="bi-msg" name="message" placeholder="Your vision, inspiration, timing..."></textarea></div>
         </div>
         <div class="btn-row" style="justify-content:space-between">
           <button class="btn btn--lime" type="submit">Send my inquiry <span class="ic">{ic("arrow")}</span></button>
