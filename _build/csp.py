@@ -276,7 +276,7 @@ def page(slug, title, description, body, tone="dark", loader=False, extra_schema
 <title>{E(title)}</title>
 <meta name="description" content="{E(description)}">
 <link rel="canonical" href="{canonical}">
-<meta name="theme-color" content="#1d1f1a">
+<meta name="theme-color" content="#0e2420">
 <meta property="og:type" content="website">
 <meta property="og:title" content="{E(title)}">
 <meta property="og:description" content="{E(description)}">
